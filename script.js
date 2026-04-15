@@ -42,7 +42,6 @@ revealOnScroll();
 /* ================= CART ================= */
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-const cartCountElement = document.getElementById('cart-count');
 const cartButtons = document.querySelectorAll('.add-to-cart');
 const cartItemsContainer = document.getElementById('cart-items');
 const cartTotalElement = document.getElementById('cart-total');
@@ -141,7 +140,7 @@ if (cartItemsContainer && cartTotalElement) {
 /* ================= CART ACTIONS ================= */
 window.increaseItem = function (name, price) {
   cart.push({ name, price });
-  localStorage.setItem('cart', JSON.stringify(cart));
+  saveCart();
   location.reload();
 };
 
@@ -150,14 +149,14 @@ window.decreaseItem = function (name, price) {
 
   if (index !== -1) {
     cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
+    saveCart();
     location.reload();
   }
 };
 
 window.removeAllItem = function (name, price) {
   cart = cart.filter(item => !(item.name === name && item.price === price));
-  localStorage.setItem('cart', JSON.stringify(cart));
+  saveCart();
   location.reload();
 };
 
@@ -165,14 +164,12 @@ window.removeAllItem = function (name, price) {
 window.checkoutWhatsApp = function () {
   const user = JSON.parse(localStorage.getItem('user'));
 
-  // 🚫 BLOCK if not logged in
   if (!user) {
     alert('Please login before placing an order.');
     window.location.href = 'login.html';
     return;
   }
 
-  // 🚫 BLOCK if cart empty
   if (cart.length === 0) {
     alert('Your cart is empty.');
     return;
@@ -218,9 +215,8 @@ window.checkoutWhatsApp = function () {
 
   const whatsappURL = `https://wa.me/${whatsappNumber}?text=${message}`;
   window.open(whatsappURL, '_blank');
-};
 
-  // ✅ ONLY HERE → reset happens AFTER checkout click
+  /* clear cart only after checkout button clicked */
   cart = [];
   localStorage.removeItem('cart');
   updateCartCount();
