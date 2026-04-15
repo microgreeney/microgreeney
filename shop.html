@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop | Microgreeney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo"><span class="logo-mark">🌱</span><span>Microgreeney</span></a>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html" class="active">Shop</a>
+        <a href="contact.html">Contact</a>
+		<a href="cart.html" class="cart-btn">
+			🛒 Cart <span id="cart-count">0</span>
+		</a>
+        <a href="login.html" class="btn btn-outline small-btn">Login / Signup</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero compact">
+      <div class="container">
+        <span class="eyebrow">Shop Fresh</span>
+        <h1>Premium indoor-grown microgreens.</h1>
+        <p>Choose your favorite microgreens and enjoy fresh harvests packed with flavor and nutrition.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="product-grid">
+          <article class="shop-card">
+            <div class="product-top">🌻</div>
+            <h3>Sunflower Microgreens</h3>
+            <p>Crunchy, mild, and nutty. Great for salads, wraps, and snacking.</p>
+            <div class="price-row"><span>RM12 / pack</span><button class="btn btn-primary add-to-cart" data-name="Sunflower Microgreens" data-price="12">Add to Cart</button></div>
+          </article>
+          <article class="shop-card">
+            <div class="product-top">🌶️</div>
+            <h3>Radish Microgreens</h3>
+            <p>Peppery and vibrant. Perfect for sandwiches, bowls, and garnishes.</p>
+            <div class="price-row"><span>RM10 / pack</span><button class="btn btn-primary add-to-cart" data-name="Radish Microgreens" data-price="10">Add to Cart</button></div>
+          </article>
+          <article class="shop-card">
+            <div class="product-top">🌿</div>
+            <h3>Broccoli Microgreens</h3>
+            <p>Mild, fresh, and easy to pair with many healthy meals.</p>
+            <div class="price-row"><span>RM11 / pack</span><button class="btn btn-primary add-to-cart" data-name="Broccoli Microgreens" data-price="11">Add to Cart</button></div>
+          </article>
+          <article class="shop-card">
+            <div class="product-top">🍃</div>
+            <h3>Pea Shoots Microgreens</h3>
+            <p>Tender, juicy, and slightly sweet. Excellent for salads and stir fry.</p>
+            <div class="price-row"><span>RM13 / pack</span><button class="btn btn-primary add-to-cart" data-name="Pea Shoots Microgreens" data-price="13">Add to Cart</button></div>
+          </article>
+          <article class="shop-card">
+            <div class="product-top">🥬</div>
+            <h3>Mixed Microgreens</h3>
+            <p>A colorful mix for customers who want variety in one fresh pack.</p>
+            <div class="price-row"><span>RM15 / pack</span><button class="btn btn-primary add-to-cart" data-name="Mixed Microgreens" data-price="15">Add to Cart</button></div>
+          </article>
+          <article class="shop-card">
+            <div class="product-top">🏪</div>
+            <h3>Wholesale Supply</h3>
+            <p>Bulk supply available for cafes, restaurants, and health food businesses.</p>
+            <div class="price-row"><span>Custom Quote</span><a href="contact.html" class="btn btn-outline">Enquire</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Microgreeney</h3>
+        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="login.html">Signup</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Microgreeney. All rights reserved.</p></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
