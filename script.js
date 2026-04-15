@@ -211,24 +211,15 @@ window.checkoutWhatsApp = function () {
   window.open(whatsappURL, '_blank');
 };
 
-// ✅ CLEAR CART AFTER CHECKOUT
-cart = [];
-localStorage.removeItem('cart');
+  // ✅ ONLY HERE → reset happens AFTER checkout click
+  cart = [];
+  localStorage.removeItem('cart');
+  updateCartCount();
 
-// Reset UI
-updateCartCount();
-
-if (cartItemsContainer) {
-  cartItemsContainer.innerHTML = '';
-}
-
-if (cartTotalElement) {
-  cartTotalElement.textContent = '0';
-}
-
-if (emptyCart) {
-  emptyCart.style.display = 'block';
-}
+  if (cartItemsContainer) cartItemsContainer.innerHTML = '';
+  if (cartTotalElement) cartTotalElement.textContent = '0';
+  if (emptyCart) emptyCart.style.display = 'block';
+};
 
 /* ================= USER DISPLAY ================= */
 const user = JSON.parse(localStorage.getItem('user'));
