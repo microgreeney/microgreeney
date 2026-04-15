@@ -40,7 +40,7 @@ window.addEventListener('scroll', revealOnScroll);
 revealOnScroll();
 
 /* ================= CART ================= */
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
 const cartButtons = document.querySelectorAll('.add-to-cart');
 const cartItemsContainer = document.getElementById('cart-items');
@@ -48,7 +48,7 @@ const cartTotalElement = document.getElementById('cart-total');
 const emptyCart = document.getElementById('empty-cart');
 
 function saveCart() {
-  localStorage.setItem('cart', JSON.stringify(cart));
+  sessionStorage.setItem('cart', JSON.stringify(cart));
 }
 
 function updateCartCount() {
@@ -162,7 +162,7 @@ window.removeAllItem = function (name, price) {
 
 /* ================= WHATSAPP CHECKOUT ================= */
 window.checkoutWhatsApp = function () {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
 
   if (!user) {
     alert('Please login before placing an order.');
@@ -218,7 +218,7 @@ window.checkoutWhatsApp = function () {
 
   /* clear cart only after checkout button clicked */
   cart = [];
-  localStorage.removeItem('cart');
+  sessionStorage.removeItem('cart');
   updateCartCount();
 
   if (cartItemsContainer) cartItemsContainer.innerHTML = '';
@@ -227,7 +227,7 @@ window.checkoutWhatsApp = function () {
 };
 
 /* ================= USER DISPLAY ================= */
-const user = JSON.parse(localStorage.getItem('user'));
+const user = JSON.parse(sessionStorage.getItem('user'));
 const userNameEl = document.getElementById('userName');
 const guestSection = document.getElementById('guestSection');
 const userSection = document.getElementById('userSection');
