@@ -159,7 +159,7 @@ onAuthStateChanged(auth, async (user) => {
   try {
     const docSnap = await getDoc(doc(db, "users", user.uid));
     if (docSnap.exists()) {
-      localStorage.setItem("user", JSON.stringify(docSnap.data()));
+      sessionStorage.setItem("user", JSON.stringify(docSnap.data()));
     }
   } catch (err) {
     console.error("User session error:", err);
@@ -169,6 +169,6 @@ onAuthStateChanged(auth, async (user) => {
 /* ================= LOGOUT ================= */
 window.logoutUser = async function () {
   await signOut(auth);
-  localStorage.removeItem("user");
+  sessionStorage.removeItem("user");
   window.location.href = "login.html";
 };
