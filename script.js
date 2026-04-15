@@ -211,6 +211,25 @@ window.checkoutWhatsApp = function () {
   window.open(whatsappURL, '_blank');
 };
 
+// ✅ CLEAR CART AFTER CHECKOUT
+cart = [];
+localStorage.removeItem('cart');
+
+// Reset UI
+updateCartCount();
+
+if (cartItemsContainer) {
+  cartItemsContainer.innerHTML = '';
+}
+
+if (cartTotalElement) {
+  cartTotalElement.textContent = '0';
+}
+
+if (emptyCart) {
+  emptyCart.style.display = 'block';
+}
+
 /* ================= USER DISPLAY ================= */
 const user = JSON.parse(localStorage.getItem('user'));
 const userNameEl = document.getElementById('userName');
