@@ -160,16 +160,28 @@ window.removeAllItem = function (name, price) {
   location.reload();
 };
 
+/* ================= AUTO-FILL CUSTOMER NAME ================= */
+const currentUserData = JSON.parse(sessionStorage.getItem('user'));
+
+if (currentUserData) {
+  const nameInput = document.getElementById('customerName');
+  if (nameInput) {
+    nameInput.value = currentUserData.name || '';
+  }
+}
+
 /* ================= WHATSAPP CHECKOUT ================= */
-window.checkoutWhatsApp = function () {
+window.checkoutWhatsApp = async function () {
   const user = JSON.parse(sessionStorage.getItem('user'));
 
+  /* must login first */
   if (!user) {
     alert('Please login before placing an order.');
     window.location.href = 'login.html';
     return;
   }
 
+  /* cart empty check */
   if (cart.length === 0) {
     alert('Your cart is empty.');
     return;
@@ -198,16 +210,52 @@ window.checkoutWhatsApp = function () {
     }
   });
 
+  const orderItems = Object.values(groupedCart).map(item => {
+    const subtotal = item.price * item.quantity;
+    total += subtotal;
+
+    return {
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      subtotal: subtotal
+    };
+  });
+
+  const orderData = {
+    userId: user.uid || '',
+    userName: user.name || '',
+    userEmail: user.email || '',
+    customerName,
+    customerPhone,
+    customerAddress,
+    items: orderItems,
+    total,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+
+  /* save to Firebase first */
+  let orderId = null;
+
+  if (typeof window.saveOrderToFirebase === 'function') {
+    orderId = await window.saveOrderToFirebase(orderData);
+  }
+
+  if (!orderId) {
+    alert('Failed to save order. Please try again.');
+    return;
+  }
+
   let message = 'Hello, I would like to place an order:%0A%0A';
+  message += `Order ID: ${orderId}%0A`;
   message += `Name: ${customerName}%0A`;
   message += `Phone: ${customerPhone}%0A`;
   message += `Address: ${customerAddress}%0A%0A`;
   message += 'Order Details:%0A';
 
-  Object.values(groupedCart).forEach(item => {
-    const subtotal = item.price * item.quantity;
-    total += subtotal;
-    message += `• ${item.name} x${item.quantity} = RM ${subtotal.toFixed(2)}%0A`;
+  orderItems.forEach(item => {
+    message += `• ${item.name} x${item.quantity} = RM ${item.subtotal.toFixed(2)}%0A`;
   });
 
   message += `%0ATotal: RM ${total.toFixed(2)}%0A%0A`;
@@ -216,7 +264,7 @@ window.checkoutWhatsApp = function () {
   const whatsappURL = `https://wa.me/${whatsappNumber}?text=${message}`;
   window.open(whatsappURL, '_blank');
 
-  /* clear cart only after checkout button clicked */
+  /* clear cart only after successful checkout */
   cart = [];
   sessionStorage.removeItem('cart');
   updateCartCount();
