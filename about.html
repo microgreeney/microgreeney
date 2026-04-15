@@ -21,7 +21,18 @@
 		<a href="cart.html" class="cart-btn">
 			🛒 Cart <span id="cart-count">0</span>
 		</a>
-        <a href="login.html" class="btn btn-outline small-btn">Login / Signup</a>
+        <div id="guestSection">
+ 			<a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
+    		Login / Signup
+  			</a>
+		</div>
+
+		<div id="userSection" style="display: none; align-items: center; gap: 12px;">
+  			<span id="userName"></span>
+  			<button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
+    		Logout
+  			</button>
+		</div>
       </nav>
       <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
