@@ -11,7 +11,9 @@ import {
   doc,
   setDoc,
   getDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 /* ================= FIREBASE CONFIG ================= */
@@ -154,10 +156,14 @@ if (loginForm) {
 
 /* ================= SAVE USER SESSION ================= */
 onAuthStateChanged(auth, async (user) => {
-  if (!user) return;
+  if (!user) {
+    sessionStorage.removeItem("user");
+    return;
+  }
 
   try {
     const docSnap = await getDoc(doc(db, "users", user.uid));
+
     if (docSnap.exists()) {
       sessionStorage.setItem("user", JSON.stringify(docSnap.data()));
     }
@@ -168,7 +174,24 @@ onAuthStateChanged(auth, async (user) => {
 
 /* ================= LOGOUT ================= */
 window.logoutUser = async function () {
-  await signOut(auth);
+  try {
+    await signOut(auth);
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
+
   sessionStorage.removeItem("user");
+  sessionStorage.removeItem("cart");
   window.location.href = "login.html";
+};
+
+/* ================= SAVE ORDER ================= */
+window.saveOrderToFirebase = async function (orderData) {
+  try {
+    const docRef = await addDoc(collection(db, "orders"), orderData);
+    return docRef.id;
+  } catch (err) {
+    console.error("Error saving order:", err);
+    return null;
+  }
 };
