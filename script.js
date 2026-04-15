@@ -154,6 +154,16 @@ window.removeAllItem = function (name, price) {
 
 /* ================= WHATSAPP CHECKOUT ================= */
 window.checkoutWhatsApp = function () {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  // 🚫 BLOCK if not logged in
+  if (!user) {
+    alert('Please login before placing an order.');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  // 🚫 BLOCK if cart empty
   if (cart.length === 0) {
     alert('Your cart is empty.');
     return;
