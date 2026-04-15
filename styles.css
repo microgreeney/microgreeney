@@ -320,7 +320,7 @@ button, input, textarea { font: inherit; }
 }
 
 .hero-image-placeholder img {
-  width: 45%;
+  width: 50%;
   height: auto;
   display: block;
   margin: 0 auto;
