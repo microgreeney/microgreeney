@@ -52,9 +52,15 @@ function saveCart() {
 }
 
 function updateCartCount() {
-  const countEl = document.getElementById('cart-count');
-  if (countEl) {
-    countEl.textContent = cart.length;
+  const desktopCount = document.getElementById('cart-count');
+  const mobileCount = document.getElementById('cart-count-mobile');
+
+  if (desktopCount) {
+    desktopCount.textContent = cart.length;
+  }
+
+  if (mobileCount) {
+    mobileCount.textContent = cart.length;
   }
 }
 
