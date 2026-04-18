@@ -4,140 +4,117 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact | Microgreeney</title>
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-
-<!-- ===== HEADER ===== -->
-<header class="site-header">
-  <div class="container nav-wrap">
-    <a href="index.html" class="logo">
-      <span class="logo-mark">🌱</span>
-      <span>Microgreeney</span>
-    </a>
-
-    <nav class="nav-menu" id="navMenu">
-      <a href="index.html">Home</a>
-      <a href="about.html">About Us</a>
-      <a href="shop.html">Shop</a>
-      <a href="contact.html" class="active">Contact</a>
-
-      <a href="cart.html" class="cart-btn">
-        🛒 Cart <span id="cart-count">0</span>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🌱</span>
+        <span>Microgreeney</span>
       </a>
 
-      <div id="guestSection">
-        <a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
-        Login / Signup
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html" class="active">Contact</a>
+
+        <a href="cart.html" class="cart-btn">
+          🛒 Cart <span id="cart-count">0</span>
         </a>
-      </div>
 
-      <div id="userSection" style="display: none; align-items: center; gap: 12px;">
-        <span id="userName"></span>
-        <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
-        Logout
-        </button>
-      </div>
-    </nav>
-
-    <button class="menu-toggle" id="menuToggle">☰</button>
-  </div>
-</header>
-
-<!-- ===== MAIN ===== -->
-<main>
-  <section class="section">
-    <div class="container">
-
-      <!-- TITLE -->
-      <span class="eyebrow">Contact Us</span>
-      <h1>Let’s talk about your fresh microgreen needs.</h1>
-      <p class="hero-text">
-        Reach out for orders, wholesale supply, collaborations, or general enquiries.
-      </p>
-
-      <!-- GRID -->
-      <div class="contact-grid" style="margin-top: 2rem;">
-
-        <!-- LEFT SIDE -->
-        <div class="info-card">
-          <h2>Get In Touch</h2>
-          <p><strong>Business Name:</strong> Microgreeney</p>
-          <p><strong>Email:</strong> microgreeney@gmail.com</p>
-          <p><strong>Phone:</strong> +6011-10659774</p>
-          <p><strong>Location:</strong> Perai, Penang, Malaysia</p>
-          <p><strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM</p>
+        <div id="guestSection">
+          <a href="login.html" class="btn btn-outline small-btn">Login / Signup</a>
         </div>
 
-        <!-- RIGHT SIDE -->
-        <form class="contact-form" id="contactForm">
-          <h2>Send a Message</h2>
+        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+          <span id="userName"></span>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">Logout</button>
+        </div>
+      </nav>
 
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="Enter your name" required>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email" required>
-          </div>
-
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" rows="6" placeholder="Write your message" required></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary full-btn">
-            Send Message
-          </button>
-
-          <p class="form-note" id="contactMessage"></p>
-        </form>
-
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon-mobile">🛒 <span id="cart-count-mobile">0</span></a>
+        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
       </div>
     </div>
-  </section>
-</main>
+  </header>
 
-<!-- ===== FOOTER ===== -->
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div>
-      <h3>Microgreeney</h3>
-      <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+  <main>
+    <section class="section">
+      <div class="container">
+        <span class="eyebrow">Contact Us</span>
+        <h1>Let’s talk about your fresh microgreen needs.</h1>
+        <p class="hero-text">Reach out for orders, wholesale supply, collaborations, or general enquiries.</p>
+
+        <div class="contact-grid" style="margin-top: 2rem;">
+          <div class="info-card">
+            <h2>Get In Touch</h2>
+            <p><strong>Business Name:</strong> Microgreeney</p>
+            <p><strong>Email:</strong> microgreeney@gmail.com</p>
+            <p><strong>Phone:</strong> +6011-10659774</p>
+            <p><strong>Location:</strong> Perai, Penang, Malaysia</p>
+            <p><strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM</p>
+          </div>
+
+          <form class="contact-form" id="contactForm">
+            <h2>Send a Message</h2>
+
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" rows="6" placeholder="Write your message" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary full-btn">Send Message</button>
+            <p class="form-note" id="contactMessage"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Microgreeney</h3>
+        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="login.html">Signup</a>
+      </div>
     </div>
 
-    <div>
-      <h4>Quick Links</h4>
-      <a href="index.html">Home</a>
-      <a href="about.html">About Us</a>
-      <a href="shop.html">Shop</a>
-      <a href="contact.html">Contact</a>
+    <div class="footer-bottom">
+      <p>© 2026 Microgreeney. All rights reserved.</p>
     </div>
+  </footer>
 
-    <div>
-      <h4>Account</h4>
-      <a href="login.html">Login</a>
-      <a href="login.html">Signup</a>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2026 Microgreeney. All rights reserved.</p>
-  </div>
-</footer>
-
-<!-- JS -->
-<script type="module" src="firebase-auth.js"></script>
-<script src="script.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-auth.js"></script>
 </body>
 </html>
