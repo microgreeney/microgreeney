@@ -22,13 +22,25 @@
         <a href="about.html">About Us</a>
         <a href="shop.html">Shop</a>
         <a href="contact.html">Contact</a>
+
         <a href="cart.html" class="cart-btn">
           🛒 Cart <span id="cart-count">0</span>
         </a>
-        <a href="login.html" class="btn btn-outline small-btn active-btn">Login / Signup</a>
+
+        <div id="guestSection">
+          <a href="login.html" class="btn btn-outline small-btn active-btn">Login / Signup</a>
+        </div>
+
+        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+          <span id="userName"></span>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">Logout</button>
+        </div>
       </nav>
 
-      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon-mobile">🛒 <span id="cart-count-mobile">0</span></a>
+        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      </div>
     </div>
   </header>
 
