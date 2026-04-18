@@ -64,10 +64,8 @@ function updateCartCount() {
   }
 }
 
-/* show count immediately when page loads */
 updateCartCount();
 
-/* add to cart */
 cartButtons.forEach((button) => {
   button.addEventListener('click', () => {
     const name = button.getAttribute('data-name');
@@ -180,14 +178,12 @@ if (currentUserData) {
 window.checkoutWhatsApp = async function () {
   const user = JSON.parse(sessionStorage.getItem('user'));
 
-  /* must login first */
   if (!user) {
     alert('Please login before placing an order.');
     window.location.href = 'login.html';
     return;
   }
 
-  /* cart empty check */
   if (cart.length === 0) {
     alert('Your cart is empty.');
     return;
@@ -241,7 +237,6 @@ window.checkoutWhatsApp = async function () {
     createdAt: new Date().toISOString()
   };
 
-  /* save to Firebase first */
   let orderId = null;
 
   if (typeof window.saveOrderToFirebase === 'function') {
@@ -270,7 +265,6 @@ window.checkoutWhatsApp = async function () {
   const whatsappURL = `https://wa.me/${whatsappNumber}?text=${message}`;
   window.open(whatsappURL, '_blank');
 
-  /* clear cart only after successful checkout */
   cart = [];
   sessionStorage.removeItem('cart');
   updateCartCount();
