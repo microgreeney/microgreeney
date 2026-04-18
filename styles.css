@@ -805,3 +805,42 @@ input:focus, textarea:focus {
   padding: 0.5rem 0.9rem;
   font-size: 0.85rem;
 }
+
+/* ===== MOBILE CART ICON ===== */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cart-icon-mobile {
+  display: none;
+  position: relative;
+  font-size: 1.2rem;
+  background: rgba(255,255,255,0.15);
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: white;
+  font-weight: 600;
+}
+
+.cart-icon-mobile span {
+  background: #ff4d4d;
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
+/* SHOW ONLY ON MOBILE */
+@media (max-width: 920px) {
+  .cart-icon-mobile {
+    display: inline-flex;
+  }
+
+  /* hide cart inside menu */
+  .nav-menu .cart-btn {
+    display: none;
+  }
+}
