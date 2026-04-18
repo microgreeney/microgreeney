@@ -4,129 +4,115 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cart | Microgreeney</title>
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-
-<!-- ===== NAVBAR ===== -->
-<header class="site-header">
-  <div class="container nav-wrap">
-    <a href="index.html" class="logo">
-      <span class="logo-mark">🌱</span>
-      <span>Microgreeney</span>
-    </a>
-
-    <nav class="nav-menu" id="navMenu">
-      <a href="index.html">Home</a>
-      <a href="about.html">About Us</a>
-      <a href="shop.html">Shop</a>
-      <a href="contact.html">Contact</a>
-      <a href="cart.html" class="cart-btn active">
-        🛒 Cart <span id="cart-count">0</span>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🌱</span>
+        <span>Microgreeney</span>
       </a>
-    <div id="guestSection">
-  		<a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
-    	Login / Signup
-  		</a>
-	</div>
 
-	<div id="userSection" style="display: none; align-items: center; gap: 12px;">
-  		<span id="userName"></span>
-  		<button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
-    	Logout
-  		</button>
-	</div>
-    </nav>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
 
-    <button class="menu-toggle" id="menuToggle">☰</button>
-  </div>
-</header>
+        <a href="cart.html" class="cart-btn active">
+          🛒 Cart <span id="cart-count">0</span>
+        </a>
 
-<!-- ===== MAIN ===== -->
-<main>
-  <section class="section">
-    <div class="container">
+        <div id="guestSection">
+          <a href="login.html" class="btn btn-outline small-btn">Login / Signup</a>
+        </div>
 
-      <div class="section-title">
-        <h1>Your Cart</h1>
-        <p>Review your selected microgreens before checkout.</p>
+        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+          <span id="userName"></span>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">Logout</button>
+        </div>
+      </nav>
+
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon-mobile">🛒 <span id="cart-count-mobile">0</span></a>
+        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h1>Your Cart</h1>
+          <p>Review your selected microgreens before checkout.</p>
+        </div>
+
+        <div id="cart-items"></div>
+
+        <p id="empty-cart" style="display:none; text-align:center; margin-top:20px;">
+          Your cart is empty 🌱
+        </p>
+
+        <div class="contact-form cart-customer-form">
+          <h2>Customer Details</h2>
+
+          <div class="form-group">
+            <label for="customerName">Full Name</label>
+            <input type="text" id="customerName" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="customerPhone">Phone Number</label>
+            <input type="text" id="customerPhone" placeholder="Enter your phone number" required>
+          </div>
+
+          <div class="form-group">
+            <label for="customerAddress">Delivery Address</label>
+            <textarea id="customerAddress" rows="4" placeholder="Enter your address" required></textarea>
+          </div>
+        </div>
+
+        <div class="cart-total">
+          <h2>Total: RM <span id="cart-total">0</span></h2>
+          <button class="btn btn-primary" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Microgreeney</h3>
+        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
       </div>
 
-      <!-- Cart Items -->
-      <div id="cart-items"></div>
-
-      <!-- Empty Message -->
-      <p id="empty-cart" style="display:none; text-align:center; margin-top:20px;">
-        Your cart is empty 🌱
-      </p>
-
-<div class="contact-form cart-customer-form">
-  <h2>Customer Details</h2>
-
-  <div class="form-group">
-    <label for="customerName">Full Name</label>
-    <input type="text" id="customerName" placeholder="Enter your full name" required>
-  </div>
-
-  <div class="form-group">
-    <label for="customerPhone">Phone Number</label>
-    <input type="text" id="customerPhone" placeholder="Enter your phone number" required>
-  </div>
-
-  <div class="form-group">
-    <label for="customerAddress">Delivery Address</label>
-    <textarea id="customerAddress" rows="4" placeholder="Enter your address" required></textarea>
-  </div>
-</div>
-
-      <!-- Total -->
-      <div class="cart-total">
-        <h2>Total: RM <span id="cart-total">0</span></h2>
-        <button class="btn btn-primary" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
       </div>
 
-    </div>
-  </section>
-</main>
-
-<!-- ===== FOOTER ===== -->
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div>
-      <h3>Microgreeney</h3>
-      <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="login.html">Signup</a>
+      </div>
     </div>
 
-    <div>
-      <h4>Quick Links</h4>
-      <a href="index.html">Home</a>
-      <a href="about.html">About Us</a>
-      <a href="shop.html">Shop</a>
-      <a href="contact.html">Contact</a>
+    <div class="footer-bottom">
+      <p>© 2026 Microgreeney. All rights reserved.</p>
     </div>
+  </footer>
 
-    <div>
-      <h4>Account</h4>
-      <a href="login.html">Login</a>
-      <a href="login.html">Signup</a>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2026 Microgreeney. All rights reserved.</p>
-  </div>
-</footer>
-
-<!-- JS -->
-<script type="module" src="firebase-auth.js"></script>
-<script src="script.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="firebase-auth.js"></script>
 </body>
 </html>
