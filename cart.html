@@ -28,18 +28,24 @@
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn">Login / Signup</a>
+          <a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
+            Login / Signup
+          </a>
         </div>
 
         <div id="userSection" style="display: none; align-items: center; gap: 12px;">
           <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">Logout</button>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
+            Logout
+          </button>
         </div>
       </nav>
 
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile">🛒 <span id="cart-count-mobile">0</span></a>
-        <button class="menu-toggle" id="menuToggle" type="button">☰</button>
+        <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+          🛒 <span id="cart-count-mobile">0</span>
+        </a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
       </div>
     </div>
   </header>
