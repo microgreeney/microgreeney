@@ -81,7 +81,10 @@ async function loadMyOrders(user) {
       );
       snapshot = await getDocs(q);
     } catch (error) {
-      const fallbackQuery = query(ordersRef, where("userId", "==", user.uid));
+      const fallbackQuery = query(
+        ordersRef,
+        where("userId", "==", user.uid)
+      );
       snapshot = await getDocs(fallbackQuery);
     }
 
@@ -117,6 +120,7 @@ async function loadMyOrders(user) {
               <p><strong>Name:</strong> ${order.customerName || "-"}</p>
               <p><strong>Phone:</strong> ${order.customerPhone || "-"}</p>
               <p><strong>Address:</strong> ${order.customerAddress || "-"}</p>
+              <p><strong>Email:</strong> ${order.userEmail || "-"}</p>
             </div>
 
             <div class="admin-order-section">
