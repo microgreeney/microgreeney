@@ -1,5 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
 import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+import {
   getFirestore,
   collection,
   getDocs,
@@ -17,9 +21,14 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 const adminOrders = document.getElementById("adminOrders");
+
+/* ================= ADMIN EMAIL ================= */
+/* CHANGE THIS TO YOUR EMAIL */
+const ADMIN_EMAIL = "microgreeney@gmail.com";
 
 function formatDate(value) {
   if (!value) return "N/A";
@@ -51,6 +60,16 @@ function formatItems(items = []) {
       return `<li>${item.name} × ${qty} — RM ${subtotal}</li>`;
     })
     .join("");
+}
+
+function showAccessDenied(message) {
+  if (!adminOrders) return;
+
+  adminOrders.innerHTML = `
+    <div class="admin-empty">
+      <p>${message}</p>
+    </div>
+  `;
 }
 
 window.loadOrders = async function () {
@@ -120,4 +139,23 @@ window.loadOrders = async function () {
   }
 };
 
-loadOrders();
+/* ================= PROTECT ADMIN PAGE ================= */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    showAccessDenied("Access denied. Please login with the admin account.");
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+    return;
+  }
+
+  if ((user.email || "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+    showAccessDenied("Access denied. This page is only for the admin.");
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
+    return;
+  }
+
+  loadOrders();
+});
