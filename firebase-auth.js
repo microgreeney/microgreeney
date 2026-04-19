@@ -4,7 +4,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  signOut
+  signOut,
+  setPersistence,
+  browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import {
   getFirestore,
@@ -39,8 +41,26 @@ const signupForm = document.getElementById("signupForm");
 const loginForm = document.getElementById("loginForm");
 const tabButtons = document.querySelectorAll(".tab-btn");
 
+/* ================= START AUTH ================= */
+async function initAuth() {
+  try {
+    await setPersistence(auth, browserSessionPersistence);
+  } catch (err) {
+    console.error("Persistence error:", err);
+  }
+
+  setupTabs();
+  setupSignup();
+  setupLogin();
+  setupAuthState();
+}
+
+initAuth();
+
 /* ================= LOGIN / SIGNUP TABS ================= */
-if (tabButtons.length && loginForm && signupForm) {
+function setupTabs() {
+  if (!tabButtons.length || !loginForm || !signupForm) return;
+
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
       tabButtons.forEach((btn) => btn.classList.remove("active"));
@@ -64,7 +84,9 @@ if (tabButtons.length && loginForm && signupForm) {
 }
 
 /* ================= SIGNUP ================= */
-if (signupForm) {
+function setupSignup() {
+  if (!signupForm) return;
+
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -102,6 +124,8 @@ if (signupForm) {
 
       signupForm.reset();
 
+      await signOut(auth);
+
       const loginTab = document.querySelector('[data-tab="loginForm"]');
       if (loginTab) {
         loginTab.click();
@@ -118,7 +142,9 @@ if (signupForm) {
 }
 
 /* ================= LOGIN ================= */
-if (loginForm) {
+function setupLogin() {
+  if (!loginForm) return;
+
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -160,31 +186,35 @@ if (loginForm) {
 }
 
 /* ================= USER SESSION ================= */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    sessionStorage.removeItem(USER_KEY);
-    return;
-  }
-
-  try {
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      sessionStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
-    } else {
-      const fallbackUser = {
-        uid: user.uid,
-        name: user.displayName || "User",
-        email: user.email || ""
-      };
-
-      sessionStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
+function setupAuthState() {
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      sessionStorage.removeItem(USER_KEY);
+      return;
     }
-  } catch (err) {
-    console.error("User session error:", err);
-  }
-});
+
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        sessionStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
+      } else {
+        const fallbackUser = {
+          uid: user.uid,
+          name: user.displayName || "User",
+          email: user.email || ""
+        };
+
+        sessionStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
+      }
+
+      window.dispatchEvent(new Event("authStateUpdated"));
+    } catch (err) {
+      console.error("User session error:", err);
+    }
+  });
+}
 
 /* ================= LOGOUT ================= */
 window.logoutUser = async function () {
