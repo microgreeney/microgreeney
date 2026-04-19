@@ -8,13 +8,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
-
 import {
   getFirestore,
   doc,
   setDoc,
   getDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 /* ================= FIREBASE CONFIG ================= */
@@ -27,15 +28,49 @@ const firebaseConfig = {
   appId: "1:416610459992:web:898a7b44460cb04750452d"
 };
 
+/* ================= INIT ================= */
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 /* ================= ADMIN EMAIL ================= */
-const ADMIN_EMAIL = "microgreeney@gmail.com"; // 🔥 change if needed
+const ADMIN_EMAIL = "microgreeney@gmail.com"; // change if needed
 
 /* ================= GOOGLE PROVIDER ================= */
 const googleProvider = new GoogleAuthProvider();
+
+/* ================= ELEMENTS ================= */
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const tabButtons = document.querySelectorAll(".tab-btn");
+
+/* ================= TAB SWITCH ================= */
+if (tabButtons.length) {
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      tabButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const target = btn.dataset.tab;
+      const login = document.getElementById("loginForm");
+      const signup = document.getElementById("signupForm");
+
+      if (!login || !signup) return;
+
+      if (target === "loginForm") {
+        login.classList.add("active-form");
+        login.classList.remove("hidden-form");
+        signup.classList.add("hidden-form");
+        signup.classList.remove("active-form");
+      } else {
+        signup.classList.add("active-form");
+        signup.classList.remove("hidden-form");
+        login.classList.add("hidden-form");
+        login.classList.remove("active-form");
+      }
+    });
+  });
+}
 
 /* ================= GOOGLE LOGIN ================= */
 window.loginWithGoogle = async function () {
@@ -57,45 +92,51 @@ window.loginWithGoogle = async function () {
 
     alert("Login successful!");
     window.location.href = "index.html";
-
   } catch (error) {
-    console.error(error);
+    console.error("Google login error:", error);
     alert("Google login failed: " + error.message);
   }
 };
 
 /* ================= EMAIL LOGIN ================= */
-const loginForm = document.getElementById("loginForm");
-
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+    const email = document.getElementById("loginEmail")?.value.trim();
+    const password = document.getElementById("loginPassword")?.value.trim();
     const message = document.getElementById("loginMessage");
+
+    if (!email || !password) {
+      if (message) message.textContent = "Please fill in email and password.";
+      return;
+    }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      message.textContent = "Login successful!";
+      if (message) message.textContent = "Login successful!";
       window.location.href = "index.html";
     } catch (error) {
-      message.textContent = error.message;
+      console.error("Login error:", error);
+      if (message) message.textContent = error.message;
     }
   });
 }
 
 /* ================= SIGNUP ================= */
-const signupForm = document.getElementById("signupForm");
-
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("signupName").value;
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
+    const name = document.getElementById("signupName")?.value.trim();
+    const email = document.getElementById("signupEmail")?.value.trim();
+    const password = document.getElementById("signupPassword")?.value.trim();
     const message = document.getElementById("signupMessage");
+
+    if (!name || !email || !password) {
+      if (message) message.textContent = "Please fill in all fields.";
+      return;
+    }
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
@@ -103,48 +144,91 @@ if (signupForm) {
 
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
-        name: name,
-        email: email,
+        name,
+        email,
         createdAt: serverTimestamp()
       });
 
-      message.textContent = "Signup successful!";
+      if (message) message.textContent = "Signup successful!";
       window.location.href = "index.html";
     } catch (error) {
-      message.textContent = error.message;
+      console.error("Signup error:", error);
+      if (message) message.textContent = error.message;
     }
   });
 }
 
 /* ================= LOGOUT ================= */
 window.logoutUser = async function () {
-  await signOut(auth);
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+
+  sessionStorage.removeItem("microgreeney_user");
+  sessionStorage.removeItem("microgreeney_cart");
   window.location.href = "login.html";
 };
 
 /* ================= AUTH STATE ================= */
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   const guestSection = document.getElementById("guestSection");
   const userSection = document.getElementById("userSection");
   const userNameEl = document.getElementById("userName");
   const adminLink = document.getElementById("adminLink");
 
   if (user) {
-    const name = user.displayName || user.email;
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-    if (userNameEl) userNameEl.textContent = name;
-    if (guestSection) guestSection.style.display = "none";
-    if (userSection) userSection.style.display = "flex";
+      let userData = {
+        uid: user.uid,
+        name: user.displayName || user.email || "User",
+        email: user.email || ""
+      };
 
-    // 🔥 SHOW ADMIN ONLY FOR YOU
-    if (adminLink && user.email === ADMIN_EMAIL) {
-      adminLink.style.display = "inline-flex";
+      if (userSnap.exists()) {
+        userData = userSnap.data();
+      }
+
+      sessionStorage.setItem("microgreeney_user", JSON.stringify(userData));
+
+      if (userNameEl) userNameEl.textContent = userData.name || userData.email || "User";
+      if (guestSection) guestSection.style.display = "none";
+      if (userSection) userSection.style.display = "flex";
+
+      if (adminLink) {
+        if ((userData.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+          adminLink.style.display = "inline-flex";
+        } else {
+          adminLink.style.display = "none";
+        }
+      }
+    } catch (error) {
+      console.error("Auth state error:", error);
     }
-
   } else {
+    sessionStorage.removeItem("microgreeney_user");
+
     if (guestSection) guestSection.style.display = "block";
     if (userSection) userSection.style.display = "none";
-
     if (adminLink) adminLink.style.display = "none";
   }
 });
+
+/* ================= SAVE ORDER TO FIREBASE ================= */
+window.saveOrderToFirebase = async function (orderData) {
+  try {
+    const docRef = await addDoc(collection(db, "orders"), {
+      ...orderData,
+      firebaseCreatedAt: serverTimestamp()
+    });
+
+    return docRef.id;
+  } catch (error) {
+    console.error("Error saving order:", error);
+    return null;
+  }
+};
