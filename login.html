@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login / Signup | Microgreeney</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Microgreeney</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -28,24 +29,22 @@
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn active-btn" id="loginBtn">
+          <a href="login.html" class="btn btn-outline small-btn active-btn">
             Login / Signup
           </a>
         </div>
 
-        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+        <div id="userSection" style="display:none; align-items:center; gap:12px;">
           <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
-            Logout
-          </button>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
         </div>
       </nav>
 
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+        <a href="cart.html" class="cart-icon-mobile">
           🛒 <span id="cart-count-mobile">0</span>
         </a>
-        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle">☰</button>
       </div>
     </div>
   </header>
@@ -53,71 +52,80 @@
   <main>
     <section class="auth-section">
       <div class="container auth-wrap">
-        <div class="auth-intro">
+
+        <!-- LEFT -->
+        <div class="auth-intro reveal">
           <span class="eyebrow">Customer Account</span>
-          <h1>Manage your orders and stay connected with fresh harvests.</h1>
-          <p>Create an account to enjoy a smoother shopping experience, track your interest, and stay updated with new microgreen products.</p>
+          <h1>Access your account</h1>
+          <p>
+            Login or create an account to manage orders, track purchases,
+            and stay connected with fresh microgreens.
+          </p>
         </div>
 
-        <div class="auth-card">
+        <!-- RIGHT -->
+        <div class="auth-card reveal">
+
           <div class="tab-buttons">
             <button type="button" class="tab-btn active" data-tab="loginForm">Login</button>
             <button type="button" class="tab-btn" data-tab="signupForm">Signup</button>
           </div>
 
+          <!-- LOGIN -->
           <form id="loginForm" class="auth-form active-form">
             <div class="form-group">
-              <label for="loginEmail">Email</label>
-              <input type="email" id="loginEmail" placeholder="Enter your email" required>
+              <label>Email</label>
+              <input type="email" id="loginEmail" required>
             </div>
 
             <div class="form-group">
-              <label for="loginPassword">Password</label>
-              <input type="password" id="loginPassword" placeholder="Enter your password" required>
+              <label>Password</label>
+              <input type="password" id="loginPassword" required>
             </div>
 
-            <button type="submit" class="btn btn-primary full-btn">Login</button>
-
-            <div style="margin: 14px 0; text-align: center; font-weight: 600; color: #5d766a;">
-              or
-            </div>
-
-            <button type="button" class="google-btn" onclick="loginWithGoogle()">
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-              <span>Continue with Google</span>
+            <button type="submit" class="btn btn-primary full-btn">
+              Login
             </button>
 
-            <p class="form-note" id="loginMessage"></p>
-          </form>
+            <p id="loginMessage" class="form-note"></p>
 
-          <form id="signupForm" class="auth-form hidden-form">
-            <div class="form-group">
-              <label for="signupName">Full Name</label>
-              <input type="text" id="signupName" placeholder="Enter your name" required>
-            </div>
-
-            <div class="form-group">
-              <label for="signupEmail">Email</label>
-              <input type="email" id="signupEmail" placeholder="Enter your email" required>
-            </div>
-
-            <div class="form-group">
-              <label for="signupPassword">Password</label>
-              <input type="password" id="signupPassword" placeholder="Enter your password" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary full-btn">Signup</button>
-
-            <div style="margin: 14px 0; text-align: center; font-weight: 600; color: #5d766a;">
-              or
-            </div>
-
-            <button type="button" class="btn btn-outline full-btn" onclick="loginWithGoogle()">
+            <!-- GOOGLE BUTTON -->
+            <button type="button" id="googleLoginBtn" class="google-btn" style="margin-top: 12px;">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg">
               Continue with Google
             </button>
-
-            <p class="form-note" id="signupMessage"></p>
           </form>
+
+          <!-- SIGNUP -->
+          <form id="signupForm" class="auth-form hidden-form">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="signupName" required>
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="signupEmail" required>
+            </div>
+
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="signupPassword" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary full-btn">
+              Signup
+            </button>
+
+            <p id="signupMessage" class="form-note"></p>
+
+            <!-- GOOGLE BUTTON -->
+            <button type="button" id="googleSignupBtn" class="google-btn" style="margin-top: 12px;">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+              Continue with Google
+            </button>
+          </form>
+
         </div>
       </div>
     </section>
@@ -127,7 +135,7 @@
     <div class="container footer-grid">
       <div>
         <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+        <p>Fresh indoor-grown microgreens for healthier meals.</p>
       </div>
 
       <div>
