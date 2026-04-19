@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact | Microgreeney</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,69 +28,74 @@
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
+          <a href="login.html" class="btn btn-outline small-btn">
             Login / Signup
           </a>
         </div>
 
-        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+        <div id="userSection" style="display:none; align-items:center; gap:12px;">
           <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
-            Logout
-          </button>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
         </div>
       </nav>
 
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+        <a href="cart.html" class="cart-icon-mobile">
           🛒 <span id="cart-count-mobile">0</span>
         </a>
-        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle">☰</button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="section">
-      <div class="container">
+    <section class="page-hero compact">
+      <div class="container reveal">
         <span class="eyebrow">Contact Us</span>
-        <h1>Let’s talk about your fresh microgreen needs.</h1>
-        <p class="hero-text">
-          Reach out for orders, wholesale supply, collaborations, or general enquiries.
-        </p>
+        <h1>Let’s talk about your microgreen needs</h1>
+        <p>We’re here to help with orders, enquiries, and collaborations.</p>
+      </div>
+    </section>
 
-        <div class="contact-grid" style="margin-top: 2rem;">
-          <div class="info-card">
-            <h2>Get In Touch</h2>
-            <p><strong>Business Name:</strong> Microgreeney</p>
-            <p><strong>Email:</strong> microgreeney@gmail.com</p>
-            <p><strong>Phone:</strong> +6011-10659774</p>
-            <p><strong>Location:</strong> Perai, Penang, Malaysia</p>
-            <p><strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM</p>
+    <section class="section reveal">
+      <div class="container contact-grid">
+
+        <!-- LEFT INFO -->
+        <div class="info-card">
+          <h2>Get In Touch</h2>
+          <p><strong>Business Name:</strong> Microgreeney</p>
+          <p><strong>Email:</strong> microgreeney@gmail.com</p>
+          <p><strong>Phone:</strong> +6011-10659774</p>
+          <p><strong>Location:</strong> Penang, Malaysia</p>
+          <p><strong>Hours:</strong> Mon - Sat, 9AM - 6PM</p>
+        </div>
+
+        <!-- RIGHT FORM -->
+        <form class="contact-form" id="contactForm">
+          <h2>Send a Message</h2>
+
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name" required>
           </div>
 
-          <form class="contact-form" id="contactForm">
-            <h2>Send a Message</h2>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" required>
+          </div>
 
-            <div class="form-group">
-              <label for="name">Full Name</label>
-              <input type="text" id="name" placeholder="Enter your name" required>
-            </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="message" rows="5" required></textarea>
+          </div>
 
-            <div class="form-group">
-              <label for="email">Email Address</label>
-              <input type="email" id="email" placeholder="Enter your email" required>
-            </div>
+          <button type="submit" class="btn btn-primary full-btn">
+            Send Message
+          </button>
 
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" rows="6" placeholder="Write your message" required></textarea>
-            </div>
+          <p id="contactMessage" class="form-note"></p>
+        </form>
 
-            <button type="submit" class="btn btn-primary full-btn">Send Message</button>
-            <p class="form-note" id="contactMessage"></p>
-          </form>
-        </div>
       </div>
     </section>
   </main>
@@ -99,7 +104,7 @@
     <div class="container footer-grid">
       <div>
         <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+        <p>Fresh indoor-grown microgreens for healthier meals.</p>
       </div>
 
       <div>
