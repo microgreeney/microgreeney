@@ -84,6 +84,8 @@ window.loginWithGoogle = async function () {
         uid: user.uid,
         name: user.displayName || "User",
         email: user.email || "",
+        phone: "",
+        address: "",
         createdAt: serverTimestamp()
       });
     }
@@ -144,6 +146,8 @@ if (signupForm) {
         uid: user.uid,
         name,
         email,
+        phone: "",
+        address: "",
         createdAt: serverTimestamp()
       });
 
@@ -184,18 +188,23 @@ onAuthStateChanged(auth, async (user) => {
       let userData = {
         uid: user.uid,
         name: user.displayName || user.email || "User",
-        email: user.email || ""
+        email: user.email || "",
+        phone: "",
+        address: ""
       };
 
       if (userSnap.exists()) {
-        userData = userSnap.data();
+        userData = {
+          ...userData,
+          ...userSnap.data()
+        };
       }
 
       sessionStorage.setItem("microgreeney_user", JSON.stringify(userData));
 
       if (userNameEl) userNameEl.textContent = userData.name || userData.email || "User";
       if (guestSection) guestSection.style.display = "none";
-      if (userSection) userSection.style.display = "flex";
+      if (userSection) userSection.style.display = "inline-flex";
 
       if (adminLink) {
         if ((userData.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
@@ -240,7 +249,7 @@ window.saveOrderToFirebase = async function (orderData) {
 
     const finalOrderData = {
       ...orderData,
-      orderId: orderId,
+      orderId,
       status: orderData.status || "Pending",
       timeline: [
         {
@@ -253,7 +262,6 @@ window.saveOrderToFirebase = async function (orderData) {
     };
 
     await setDoc(doc(db, "orders", orderId), finalOrderData);
-
     return orderId;
   } catch (error) {
     console.error("Error saving order:", error);
