@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -35,9 +36,17 @@
           </a>
         </div>
 
-        <div id="userSection" style="display:none; align-items:center; gap:12px;">
-          <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
+        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+          <button id="accountBtn" class="account-btn" type="button">
+            <span id="userName"></span>
+            <span class="account-caret">▼</span>
+          </button>
+
+          <div id="accountDropdown" class="account-dropdown-menu">
+            <a href="profile.html">👤 Profile</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          </div>
         </div>
       </nav>
 
@@ -56,7 +65,7 @@
         <div class="section-title reveal center">
           <span class="eyebrow">Order Tracking</span>
           <h1>Track Your Order</h1>
-          <p class="hero-text">Enter your Order ID to check the latest order status.</p>
+          <p class="hero-text">Enter your Order ID to check the latest status and timeline.</p>
         </div>
 
         <div class="track-order-wrap reveal">
