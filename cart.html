@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cart | Microgreeney</title>
+  <title>Contact | Microgreeney</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -21,12 +22,11 @@
         <a href="index.html">Home</a>
         <a href="about.html">About Us</a>
         <a href="shop.html">Shop</a>
-        <a href="contact.html">Contact</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+        <a href="contact.html" class="active">Contact</a>
         <a href="track.html">Track Order</a>
-        <a href="my-orders.html">My Orders</a>
+        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
 
-        <a href="cart.html" class="cart-btn active">
+        <a href="cart.html" class="cart-btn">
           🛒 Cart <span id="cart-count">0</span>
         </a>
 
@@ -36,9 +36,17 @@
           </a>
         </div>
 
-        <div id="userSection" style="display:none; align-items:center; gap:12px;">
-          <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
+        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+          <button id="accountBtn" class="account-btn" type="button">
+            <span id="userName"></span>
+            <span class="account-caret">▼</span>
+          </button>
+
+          <div id="accountDropdown" class="account-dropdown-menu">
+            <a href="profile.html">👤 Profile</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          </div>
         </div>
       </nav>
 
@@ -52,83 +60,48 @@
   </header>
 
   <main>
-    <section class="section cart-section">
-      <div class="container">
+    <section class="page-hero compact">
+      <div class="container reveal">
+        <span class="eyebrow">Contact Us</span>
+        <h1>We’d love to hear from you</h1>
+        <p>Reach out for orders, collaborations, or any questions about our microgreens.</p>
+      </div>
+    </section>
 
-        <div class="cart-page-header reveal">
-          <div>
-            <span class="eyebrow">Your Cart</span>
-            <h1>Review your order</h1>
-            <p>Check your items and proceed to checkout via WhatsApp.</p>
-          </div>
+    <section class="section reveal">
+      <div class="container contact-grid">
 
-          <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
+        <div class="info-card">
+          <h2>Get in Touch</h2>
+          <p><strong>Business Name:</strong> Microgreeney</p>
+          <p><strong>Email:</strong> microgreeney@gmail.com</p>
+          <p><strong>Phone:</strong> +60 11-1065 9774</p>
+          <p><strong>Location:</strong> Penang, Malaysia</p>
+          <p><strong>Hours:</strong> Monday – Saturday, 9:00 AM – 6:00 PM</p>
         </div>
 
-        <div class="cart-layout">
+        <form class="contact-form" id="contactForm">
+          <h2>Send a Message</h2>
 
-          <!-- LEFT -->
-          <div class="cart-main reveal">
-            <div class="cart-list-card">
-              <div class="cart-card-header">
-                <h2>Items</h2>
-                <p>Your selected products</p>
-              </div>
-
-              <div id="cart-items"></div>
-
-              <p id="empty-cart" class="empty-cart-message" style="display:none;">
-                Your cart is empty 🌱
-              </p>
-            </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" required />
           </div>
 
-          <!-- RIGHT -->
-          <aside class="cart-sidebar reveal">
-            <div class="cart-summary-card">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required />
+          </div>
 
-              <h2>Order Summary</h2>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" rows="5" required></textarea>
+          </div>
 
-              <div class="summary-row">
-                <span>Total</span>
-                <strong>RM <span id="cart-total">0.00</span></strong>
-              </div>
+          <button type="submit" class="btn btn-primary full-btn">Send Message</button>
+          <p id="contactMessage" class="form-note"></p>
+        </form>
 
-              <div class="summary-note">
-                Fresh indoor-grown microgreens prepared with care.
-              </div>
-
-              <div class="contact-form cart-customer-form">
-                <h3>Customer Details</h3>
-
-                <div class="form-group">
-                  <label>Name</label>
-                  <input type="text" id="customerName" required>
-                </div>
-
-                <div class="form-group">
-                  <label>Phone</label>
-                  <input type="text" id="customerPhone" required>
-                </div>
-
-                <div class="form-group">
-                  <label>Address</label>
-                  <textarea id="customerAddress" rows="4" required></textarea>
-                </div>
-              </div>
-
-              <button class="btn btn-primary cart-checkout-btn" onclick="checkoutWhatsApp()">
-                Checkout via WhatsApp
-              </button>
-
-              <p class="checkout-help-text">
-                You will be redirected to WhatsApp to confirm your order.
-              </p>
-
-            </div>
-          </aside>
-
-        </div>
       </div>
     </section>
   </main>
