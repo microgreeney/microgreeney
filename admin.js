@@ -29,12 +29,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ================= ADMIN EMAIL ================= */
+/* ================= ADMIN ================= */
 const ADMIN_EMAIL = "microgreeney@gmail.com";
-
 const adminOrders = document.getElementById("adminOrders");
 
-/* ================= TIME FORMAT ================= */
+/* ================= HELPERS ================= */
 function getMalaysiaTimeString() {
   const now = new Date();
   return now.toLocaleString("en-MY", {
@@ -47,7 +46,6 @@ function getMalaysiaTimeString() {
   });
 }
 
-/* ================= FORMAT DATE ================= */
 function formatDate(value) {
   if (!value) return "N/A";
 
@@ -66,13 +64,37 @@ function formatDate(value) {
   }
 }
 
-/* ================= FORMAT ITEMS ================= */
 function formatItems(items = []) {
-  if (!items.length) return "<li>No items</li>";
+  if (!Array.isArray(items) || items.length === 0) {
+    return "<li>No items</li>";
+  }
 
-  return items.map(item => {
-    return `<li>${item.name} × ${item.quantity} — RM ${Number(item.subtotal).toFixed(2)}</li>`;
-  }).join("");
+  return items
+    .map((item) => {
+      return `<li>${item.name} × ${item.quantity || 1} — RM ${Number(item.subtotal || 0).toFixed(2)}</li>`;
+    })
+    .join("");
+}
+
+function getStatusClass(status) {
+  const normalized = (status || "").toLowerCase();
+
+  if (normalized === "delivered") return "status-delivered";
+  if (normalized === "cancelled") return "status-cancelled";
+  if (normalized === "out for delivery") return "status-delivery";
+  if (normalized === "packed") return "status-packed";
+  if (normalized === "confirmed") return "status-confirmed";
+  return "status-pending";
+}
+
+function showAccessDenied(message) {
+  if (!adminOrders) return;
+
+  adminOrders.innerHTML = `
+    <div class="admin-empty">
+      <p>${message}</p>
+    </div>
+  `;
 }
 
 /* ================= LOAD ORDERS ================= */
@@ -83,8 +105,14 @@ window.loadOrders = async function () {
 
   try {
     const ordersRef = collection(db, "orders");
-    const q = query(ordersRef, orderBy("firebaseCreatedAt", "desc"));
-    const snapshot = await getDocs(q);
+    let snapshot;
+
+    try {
+      const q = query(ordersRef, orderBy("firebaseCreatedAt", "desc"));
+      snapshot = await getDocs(q);
+    } catch (error) {
+      snapshot = await getDocs(ordersRef);
+    }
 
     if (snapshot.empty) {
       adminOrders.innerHTML = `<p class="admin-empty">No orders found yet.</p>`;
@@ -95,16 +123,21 @@ window.loadOrders = async function () {
 
     snapshot.forEach((docSnap) => {
       const order = docSnap.data();
-      const id = docSnap.id;
+      const orderId = order.orderId || docSnap.id;
+      const status = order.status || "Pending";
+      const statusClass = getStatusClass(status);
 
       html += `
         <article class="admin-order-card">
           <div class="admin-order-top">
             <div>
-              <h3>Order ID: ${id}</h3>
-              <p><strong>Status:</strong> ${order.status || "Pending"}</p>
+              <h3>Order ID: ${orderId}</h3>
+              <p>
+                <strong>Status:</strong>
+                <span class="status-badge ${statusClass}">${status}</span>
+              </p>
             </div>
-            <span class="admin-order-date">${formatDate(order.firebaseCreatedAt)}</span>
+            <span class="admin-order-date">${formatDate(order.firebaseCreatedAt || order.createdAt)}</span>
           </div>
 
           <div class="admin-order-body">
@@ -124,20 +157,20 @@ window.loadOrders = async function () {
             </div>
           </div>
 
-          <div class="admin-order-footer">
+          <div class="admin-order-footer" style="justify-content:space-between; gap:1rem; flex-wrap:wrap;">
             <strong>Total: RM ${Number(order.total || 0).toFixed(2)}</strong>
 
-            <div style="margin-top:10px;">
-              <select id="status-${id}">
-                <option>Pending</option>
-                <option>Confirmed</option>
-                <option>Packed</option>
-                <option>Out for Delivery</option>
-                <option>Delivered</option>
-                <option>Cancelled</option>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <select id="status-${orderId}" class="admin-status-select">
+                <option value="Pending" ${status === "Pending" ? "selected" : ""}>Pending</option>
+                <option value="Confirmed" ${status === "Confirmed" ? "selected" : ""}>Confirmed</option>
+                <option value="Packed" ${status === "Packed" ? "selected" : ""}>Packed</option>
+                <option value="Out for Delivery" ${status === "Out for Delivery" ? "selected" : ""}>Out for Delivery</option>
+                <option value="Delivered" ${status === "Delivered" ? "selected" : ""}>Delivered</option>
+                <option value="Cancelled" ${status === "Cancelled" ? "selected" : ""}>Cancelled</option>
               </select>
 
-              <button onclick="updateOrderStatus('${id}')" class="btn btn-primary small-btn">
+              <button class="btn btn-primary small-btn" onclick="updateOrderStatus('${orderId}')">
                 Update
               </button>
             </div>
@@ -147,65 +180,74 @@ window.loadOrders = async function () {
     });
 
     adminOrders.innerHTML = html;
-
   } catch (error) {
-    console.error(error);
+    console.error("Error loading orders:", error);
     adminOrders.innerHTML = `<p class="admin-empty">Failed to load orders.</p>`;
   }
 };
 
-/* ================= UPDATE STATUS ================= */
+/* ================= UPDATE ORDER STATUS ================= */
 window.updateOrderStatus = async function (orderId) {
   try {
     const select = document.getElementById(`status-${orderId}`);
-    const newStatus = select.value;
 
-    const ref = doc(db, "orders", orderId);
-    const snap = await getDoc(ref);
+    if (!select) {
+      alert("Status selector not found.");
+      return;
+    }
+
+    const newStatus = select.value;
+    const orderRef = doc(db, "orders", orderId);
+    const snap = await getDoc(orderRef);
 
     if (!snap.exists()) {
       alert("Order not found.");
       return;
     }
 
-    const data = snap.data();
-    const timeline = data.timeline || [];
+    const orderData = snap.data();
+    const currentTimeline = Array.isArray(orderData.timeline) ? orderData.timeline : [];
+    const currentStatus = orderData.status || "Pending";
 
-    timeline.push({
+    if (currentStatus === newStatus) {
+      alert("This order already has that status.");
+      return;
+    }
+
+    currentTimeline.push({
       status: newStatus,
       time: getMalaysiaTimeString()
     });
 
-    await updateDoc(ref, {
+    await updateDoc(orderRef, {
       status: newStatus,
-      timeline: timeline,
+      timeline: currentTimeline,
       updatedAt: serverTimestamp()
     });
 
-    alert("Status updated!");
+    alert("Order status updated successfully.");
     loadOrders();
-
   } catch (error) {
-    console.error(error);
-    alert("Failed to update status.");
+    console.error("Update status error:", error);
+    alert("Failed to update order status.");
   }
 };
 
-/* ================= PROTECT ADMIN ================= */
-function showAccessDenied(message) {
-  adminOrders.innerHTML = `<p class="admin-empty">${message}</p>`;
-}
-
-onAuthStateChanged(auth, (user) => {
+/* ================= ADMIN PAGE PROTECTION ================= */
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    showAccessDenied("Login required.");
-    setTimeout(() => window.location.href = "login.html", 1500);
+    showAccessDenied("Access denied. Please login with the admin account.");
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
     return;
   }
 
   if ((user.email || "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-    showAccessDenied("Access denied.");
-    setTimeout(() => window.location.href = "index.html", 1500);
+    showAccessDenied("Access denied. This page is only for the admin.");
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
     return;
   }
 
