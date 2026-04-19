@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About | Microgreeney</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | Microgreeney</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- NAVBAR -->
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -22,9 +24,8 @@
         <a href="about.html" class="active">About Us</a>
         <a href="shop.html">Shop</a>
         <a href="contact.html">Contact</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
         <a href="track.html">Track Order</a>
-        <a href="my-orders.html">My Orders</a>
+        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
 
         <a href="cart.html" class="cart-btn">
           🛒 Cart <span id="cart-count">0</span>
@@ -36,9 +37,17 @@
           </a>
         </div>
 
-        <div id="userSection" style="display:none; align-items:center; gap:12px;">
-          <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
+        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+          <button id="accountBtn" class="account-btn" type="button">
+            <span id="userName"></span>
+            <span class="account-caret">▼</span>
+          </button>
+
+          <div id="accountDropdown" class="account-dropdown-menu">
+            <a href="profile.html">👤 Profile</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          </div>
         </div>
       </nav>
 
@@ -51,90 +60,103 @@
     </div>
   </header>
 
+  <!-- MAIN -->
   <main>
+
+    <!-- HERO -->
     <section class="page-hero compact">
       <div class="container reveal">
-        <span class="eyebrow">About Us</span>
-        <h1>Growing fresh microgreens with care and passion.</h1>
+        <span class="eyebrow">About Microgreeney</span>
+        <h1>Growing fresh, clean, and nutritious microgreens for everyday life</h1>
         <p>
-          At Microgreeney, we focus on delivering clean, fresh, and nutrient-rich microgreens grown in a controlled indoor environment.
+          We focus on quality indoor farming to deliver fresh microgreens that support healthy eating and better living.
         </p>
       </div>
     </section>
 
+    <!-- STORY -->
     <section class="section reveal">
       <div class="container split-grid">
         <div>
           <h2>Our Story</h2>
           <p>
-            Microgreeney started with a simple goal — to bring high-quality, fresh microgreens to local homes and businesses in Penang.
-            We believe that healthy food should be accessible, clean, and grown with consistency.
+            Microgreeney started with a simple idea — to make fresh, healthy microgreens accessible to everyone.
+            With a passion for indoor farming, we began growing small batches in controlled environments
+            to ensure consistent quality and hygiene.
           </p>
           <p>
-            With indoor farming techniques, we ensure every batch is grown under controlled conditions, free from outdoor contamination.
+            Today, we proudly supply microgreens to homes, cafes, and small businesses in Penang,
+            delivering fresh produce grown with care and precision.
           </p>
         </div>
 
         <div class="info-card">
-          <h3>What We Focus On</h3>
-          <ul style="margin-top: 1rem; padding-left: 1.2rem;">
-            <li>Clean indoor growing environment</li>
-            <li>Consistent product quality</li>
-            <li>Fresh harvest for every order</li>
-            <li>Local supply and delivery</li>
-          </ul>
+          <h3>Our Mission</h3>
+          <p>
+            To provide clean, nutritious, and affordable microgreens while promoting healthier lifestyles
+            through sustainable indoor farming.
+          </p>
         </div>
       </div>
     </section>
 
+    <!-- FEATURES -->
     <section class="section soft-bg reveal">
       <div class="container">
         <div class="section-title center">
-          <span class="eyebrow">Our Values</span>
-          <h2>What makes Microgreeney different</h2>
+          <span class="eyebrow">What We Offer</span>
+          <h2>Why choose Microgreeney?</h2>
         </div>
 
         <div class="card-grid three">
           <div class="feature-card">
-            <div class="icon-circle">🌿</div>
-            <h3>Quality First</h3>
-            <p>We focus on delivering premium microgreens with consistent taste and freshness.</p>
+            <div class="icon-circle">🌱</div>
+            <h3>Indoor Farming</h3>
+            <p>Controlled environment ensures consistent quality and clean produce.</p>
           </div>
 
           <div class="feature-card">
-            <div class="icon-circle">🧼</div>
-            <h3>Clean Growing</h3>
-            <p>Our indoor setup ensures hygiene and controlled growing conditions.</p>
+            <div class="icon-circle">💧</div>
+            <h3>Hygienic Process</h3>
+            <p>We maintain strict cleanliness from seed to harvest.</p>
           </div>
 
           <div class="feature-card">
-            <div class="icon-circle">🤝</div>
-            <h3>Customer Focus</h3>
-            <p>We aim to build long-term relationships with our customers and partners.</p>
+            <div class="icon-circle">🚚</div>
+            <h3>Fast Delivery</h3>
+            <p>Freshly harvested and delivered quickly to maintain quality.</p>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- VISION -->
     <section class="section reveal">
       <div class="container split-grid">
         <div class="info-card">
-          <h3>Our Mission</h3>
+          <h3>Our Vision</h3>
           <p>
-            To provide fresh, clean, and high-quality microgreens that support healthier lifestyles and better food experiences.
+            To become a trusted local brand for fresh microgreens and inspire more people
+            to adopt healthy eating habits.
           </p>
         </div>
 
-        <div class="info-card">
-          <h3>Our Vision</h3>
+        <div>
+          <h2>Looking Ahead</h2>
           <p>
-            To become a trusted local supplier of premium microgreens for homes, restaurants, and businesses across Malaysia.
+            We aim to expand our product range, improve our growing systems,
+            and reach more customers who value fresh and nutritious food.
+          </p>
+          <p>
+            Microgreeney is more than just a business — it’s a step towards healthier living.
           </p>
         </div>
       </div>
     </section>
+
   </main>
 
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
