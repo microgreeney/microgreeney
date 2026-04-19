@@ -115,7 +115,20 @@ if (loginForm) {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+
+        if (message) {
+          message.textContent = "Please verify your email first. A new verification link has been sent.";
+        }
+
+        await signOut(auth);
+        return;
+      }
+
       if (message) message.textContent = "Login successful!";
       window.location.href = "index.html";
     } catch (error) {
@@ -142,7 +155,6 @@ if (signupForm) {
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
-      await sendEmailVerification(userCredential.user);
       const user = result.user;
 
       await setDoc(doc(db, "users", user.uid), {
@@ -154,10 +166,42 @@ if (signupForm) {
         createdAt: serverTimestamp()
       });
 
-      if (message) message.textContent = "Signup successful!";
-      window.location.href = "index.html";
+      await sendEmailVerification(user);
+
+      if (message) {
+        message.textContent = "Signup successful! Verification email sent. Please check your inbox.";
+      }
+
+      await signOut(auth);
     } catch (error) {
       console.error("Signup error:", error);
+      if (message) message.textContent = error.message;
+    }
+  });
+}
+
+/* ================= FORGOT PASSWORD ================= */
+const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+
+if (forgotPasswordLink) {
+  forgotPasswordLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail")?.value.trim();
+    const message = document.getElementById("loginMessage");
+
+    if (!email) {
+      if (message) message.textContent = "Please enter your email first.";
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      if (message) {
+        message.textContent = "Password reset email sent. Please check your inbox.";
+      }
+    } catch (error) {
+      console.error("Forgot password error:", error);
       if (message) message.textContent = error.message;
     }
   });
@@ -273,30 +317,3 @@ window.saveOrderToFirebase = async function (orderData) {
 };
 
 export { auth, db };
-
-/* ================= FORGOT PASSWORD ================= */
-const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-
-if (forgotPasswordLink) {
-  forgotPasswordLink.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("loginEmail")?.value.trim();
-    const message = document.getElementById("loginMessage");
-
-    if (!email) {
-      if (message) message.textContent = "Please enter your email first.";
-      return;
-    }
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-      if (message) {
-        message.textContent = "Password reset email sent. Check your inbox.";
-      }
-    } catch (error) {
-      console.error("Forgot password error:", error);
-      if (message) message.textContent = error.message;
-    }
-  });
-}
