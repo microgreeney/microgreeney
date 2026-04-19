@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -22,9 +23,8 @@
         <a href="about.html">About Us</a>
         <a href="shop.html">Shop</a>
         <a href="contact.html" class="active">Contact</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
         <a href="track.html">Track Order</a>
-        <a href="my-orders.html">My Orders</a>
+        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
 
         <a href="cart.html" class="cart-btn">
           🛒 Cart <span id="cart-count">0</span>
@@ -36,9 +36,17 @@
           </a>
         </div>
 
-        <div id="userSection" style="display:none; align-items:center; gap:12px;">
-          <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
+        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+          <button id="accountBtn" class="account-btn" type="button">
+            <span id="userName"></span>
+            <span class="account-caret">▼</span>
+          </button>
+
+          <div id="accountDropdown" class="account-dropdown-menu">
+            <a href="profile.html">👤 Profile</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          </div>
         </div>
       </nav>
 
@@ -55,47 +63,42 @@
     <section class="page-hero compact">
       <div class="container reveal">
         <span class="eyebrow">Contact Us</span>
-        <h1>Let’s talk about your microgreen needs</h1>
-        <p>We’re here to help with orders, enquiries, and collaborations.</p>
+        <h1>We’d love to hear from you</h1>
+        <p>Reach out for orders, collaborations, or any questions about our microgreens.</p>
       </div>
     </section>
 
     <section class="section reveal">
       <div class="container contact-grid">
 
-        <!-- LEFT INFO -->
         <div class="info-card">
-          <h2>Get In Touch</h2>
+          <h2>Get in Touch</h2>
           <p><strong>Business Name:</strong> Microgreeney</p>
           <p><strong>Email:</strong> microgreeney@gmail.com</p>
-          <p><strong>Phone:</strong> +6011-10659774</p>
+          <p><strong>Phone:</strong> +60 11-1065 9774</p>
           <p><strong>Location:</strong> Penang, Malaysia</p>
-          <p><strong>Hours:</strong> Mon - Sat, 9AM - 6PM</p>
+          <p><strong>Hours:</strong> Monday – Saturday, 9:00 AM – 6:00 PM</p>
         </div>
 
-        <!-- RIGHT FORM -->
         <form class="contact-form" id="contactForm">
           <h2>Send a Message</h2>
 
           <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="name" required>
+            <label for="name">Name</label>
+            <input type="text" id="name" required />
           </div>
 
           <div class="form-group">
-            <label>Email</label>
-            <input type="email" id="email" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" required />
           </div>
 
           <div class="form-group">
-            <label>Message</label>
+            <label for="message">Message</label>
             <textarea id="message" rows="5" required></textarea>
           </div>
 
-          <button type="submit" class="btn btn-primary full-btn">
-            Send Message
-          </button>
-
+          <button type="submit" class="btn btn-primary full-btn">Send Message</button>
           <p id="contactMessage" class="form-note"></p>
         </form>
 
