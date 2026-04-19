@@ -23,8 +23,8 @@
         <a href="about.html">About Us</a>
         <a href="shop.html">Shop</a>
         <a href="contact.html">Contact</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
         <a href="track.html">Track Order</a>
+        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
 
         <a href="cart.html" class="cart-btn">
           🛒 Cart <span id="cart-count">0</span>
@@ -36,9 +36,17 @@
           </a>
         </div>
 
-        <div id="userSection" style="display:none; align-items:center; gap:12px;">
-          <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
+        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+          <button id="accountBtn" class="account-btn" type="button">
+            <span id="userName"></span>
+            <span class="account-caret">▼</span>
+          </button>
+
+          <div id="accountDropdown" class="account-dropdown-menu">
+            <a href="profile.html">👤 Profile</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          </div>
         </div>
       </nav>
 
@@ -59,8 +67,8 @@
           <span class="eyebrow">Customer Account</span>
           <h1>Access your account</h1>
           <p>
-            Login or create an account to manage orders, track purchases,
-            and stay connected with fresh microgreens.
+            Login or create an account to manage your profile, view your orders,
+            and stay connected with fresh indoor-grown microgreens.
           </p>
         </div>
 
@@ -73,13 +81,13 @@
 
           <form id="loginForm" class="auth-form active-form">
             <div class="form-group">
-              <label>Email</label>
-              <input type="email" id="loginEmail" required>
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" required />
             </div>
 
             <div class="form-group">
-              <label>Password</label>
-              <input type="password" id="loginPassword" required>
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" required />
             </div>
 
             <button type="submit" class="btn btn-primary full-btn">
@@ -96,18 +104,18 @@
 
           <form id="signupForm" class="auth-form hidden-form">
             <div class="form-group">
-              <label>Name</label>
-              <input type="text" id="signupName" required>
+              <label for="signupName">Name</label>
+              <input type="text" id="signupName" required />
             </div>
 
             <div class="form-group">
-              <label>Email</label>
-              <input type="email" id="signupEmail" required>
+              <label for="signupEmail">Email</label>
+              <input type="email" id="signupEmail" required />
             </div>
 
             <div class="form-group">
-              <label>Password</label>
-              <input type="password" id="signupPassword" required>
+              <label for="signupPassword">Password</label>
+              <input type="password" id="signupPassword" required />
             </div>
 
             <button type="submit" class="btn btn-primary full-btn">
