@@ -7,29 +7,20 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
-const profileForm = document.getElementById("profileForm");
+const profileNameText = document.getElementById("profileName");
+const profileEmailText = document.getElementById("profileEmail");
+
+const updateName = document.getElementById("updateName");
+const updatePhone = document.getElementById("updatePhone");
+const updateAddress = document.getElementById("updateAddress");
 const profileMessage = document.getElementById("profileMessage");
-
-const profileAvatar = document.getElementById("profileAvatar");
-const profileDisplayName = document.getElementById("profileDisplayName");
-const profileEmailText = document.getElementById("profileEmailText");
-
-const profileName = document.getElementById("profileName");
-const profileEmail = document.getElementById("profileEmail");
-const profilePhone = document.getElementById("profilePhone");
-const profileAddress = document.getElementById("profileAddress");
 
 let currentUser = null;
 
-function setMessage(text, isError = false) {
+function showMessage(text, isError = false) {
   if (!profileMessage) return;
   profileMessage.textContent = text;
   profileMessage.style.color = isError ? "#b42323" : "";
-}
-
-function getInitial(name, email) {
-  const source = (name || email || "U").trim();
-  return source.charAt(0).toUpperCase();
 }
 
 async function loadProfile(user) {
@@ -52,116 +43,90 @@ async function loadProfile(user) {
       };
     }
 
-    if (profileDisplayName) {
-      profileDisplayName.textContent = userData.name || "User";
+    if (profileNameText) {
+      profileNameText.textContent = userData.name || "-";
     }
 
     if (profileEmailText) {
       profileEmailText.textContent = userData.email || "-";
     }
 
-    if (profileAvatar) {
-      profileAvatar.textContent = getInitial(userData.name, userData.email);
+    if (updateName) {
+      updateName.value = userData.name || "";
     }
 
-    if (profileName) {
-      profileName.value = userData.name || "";
+    if (updatePhone) {
+      updatePhone.value = userData.phone || "";
     }
 
-    if (profileEmail) {
-      profileEmail.value = userData.email || "";
-    }
-
-    if (profilePhone) {
-      profilePhone.value = userData.phone || "";
-    }
-
-    if (profileAddress) {
-      profileAddress.value = userData.address || "";
+    if (updateAddress) {
+      updateAddress.value = userData.address || "";
     }
   } catch (error) {
     console.error("Load profile error:", error);
-    setMessage("Failed to load profile.", true);
+    showMessage("Failed to load profile.", true);
   }
 }
 
-if (profileForm) {
-  profileForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+window.updateProfile = async function () {
+  if (!currentUser) {
+    showMessage("Please login first.", true);
+    return;
+  }
 
-    if (!currentUser) {
-      setMessage("Please login first.", true);
-      return;
-    }
+  const name = updateName?.value.trim() || "";
+  const phone = updatePhone?.value.trim() || "";
+  const address = updateAddress?.value.trim() || "";
+  const email = currentUser.email || "";
 
-    const name = profileName?.value.trim() || "";
-    const email = currentUser.email || "";
-    const phone = profilePhone?.value.trim() || "";
-    const address = profileAddress?.value.trim() || "";
+  if (!name) {
+    showMessage("Please enter your name.", true);
+    return;
+  }
 
-    if (!name) {
-      setMessage("Please enter your full name.", true);
-      return;
-    }
-
-    try {
-      const saveBtn = profileForm.querySelector("button[type='submit']");
-      if (saveBtn) {
-        saveBtn.disabled = true;
-        saveBtn.textContent = "Saving...";
-      }
-
-      await setDoc(
-        doc(db, "users", currentUser.uid),
-        {
-          uid: currentUser.uid,
-          name,
-          email,
-          phone,
-          address,
-          updatedAt: serverTimestamp()
-        },
-        { merge: true }
-      );
-
-      const sessionUser = {
+  try {
+    await setDoc(
+      doc(db, "users", currentUser.uid),
+      {
         uid: currentUser.uid,
         name,
-        email
-      };
+        email,
+        phone,
+        address,
+        updatedAt: serverTimestamp()
+      },
+      { merge: true }
+    );
 
-      sessionStorage.setItem("microgreeney_user", JSON.stringify(sessionUser));
+    const updatedSessionUser = {
+      uid: currentUser.uid,
+      name,
+      email,
+      phone,
+      address
+    };
 
-      if (profileDisplayName) {
-        profileDisplayName.textContent = name;
-      }
+    sessionStorage.setItem("microgreeney_user", JSON.stringify(updatedSessionUser));
 
-      if (profileEmailText) {
-        profileEmailText.textContent = email || "-";
-      }
-
-      if (profileAvatar) {
-        profileAvatar.textContent = getInitial(name, email);
-      }
-
-      const navbarUserName = document.getElementById("userName");
-      if (navbarUserName) {
-        navbarUserName.textContent = name;
-      }
-
-      setMessage("Profile updated successfully.");
-    } catch (error) {
-      console.error("Save profile error:", error);
-      setMessage("Failed to save profile.", true);
-    } finally {
-      const saveBtn = profileForm.querySelector("button[type='submit']");
-      if (saveBtn) {
-        saveBtn.disabled = false;
-        saveBtn.textContent = "Save Profile";
-      }
+    if (profileNameText) {
+      profileNameText.textContent = name;
     }
-  });
-}
+
+    if (profileEmailText) {
+      profileEmailText.textContent = email || "-";
+    }
+
+    const navbarUserName = document.getElementById("userName");
+    if (navbarUserName) {
+      navbarUserName.textContent = name;
+    }
+
+    showMessage("Profile updated successfully.");
+  } catch (error) {
+    console.error("Save profile error:", error);
+    showMessage("Failed to save profile.", true);
+  }
+};
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
