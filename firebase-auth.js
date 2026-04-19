@@ -36,6 +36,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
+/* ================= SESSION ONLY ================= */
+await setPersistence(auth, browserSessionPersistence);
+
 /* ================= STORAGE KEY ================= */
 const USER_KEY = "microgreeney_user";
 
@@ -44,32 +47,14 @@ const signupForm = document.getElementById("signupForm");
 const loginForm = document.getElementById("loginForm");
 const tabButtons = document.querySelectorAll(".tab-btn");
 
-/* ================= START AUTH ================= */
-async function initAuth() {
-  try {
-    await setPersistence(auth, browserSessionPersistence);
-  } catch (err) {
-    console.error("Persistence error:", err);
-  }
+/* ================= TAB SWITCH ================= */
+if (tabButtons.length && loginForm && signupForm) {
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      tabButtons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
 
-  setupTabs();
-  setupSignup();
-  setupLogin();
-  setupAuthState();
-}
-
-initAuth();
-
-/* ================= LOGIN / SIGNUP TABS ================= */
-function setupTabs() {
-  if (!tabButtons.length || !loginForm || !signupForm) return;
-
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      const target = button.dataset.tab;
+      const target = btn.dataset.tab;
 
       if (target === "loginForm") {
         loginForm.classList.add("active-form");
@@ -87,9 +72,7 @@ function setupTabs() {
 }
 
 /* ================= SIGNUP ================= */
-function setupSignup() {
-  if (!signupForm) return;
-
+if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -134,8 +117,7 @@ function setupSignup() {
         loginTab.click();
       }
     } catch (err) {
-      console.error("Firebase signup error:", err);
-
+      console.error("Signup error:", err);
       if (msg) {
         msg.textContent = getFriendlyAuthMessage(err);
         msg.style.color = "red";
@@ -145,9 +127,7 @@ function setupSignup() {
 }
 
 /* ================= LOGIN ================= */
-function setupLogin() {
-  if (!loginForm) return;
-
+if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -176,10 +156,9 @@ function setupLogin() {
 
       setTimeout(() => {
         window.location.href = "index.html";
-      }, 800);
+      }, 700);
     } catch (err) {
-      console.error("Firebase login error:", err);
-
+      console.error("Login error:", err);
       if (msg) {
         msg.textContent = getFriendlyAuthMessage(err);
         msg.style.color = "red";
@@ -227,10 +206,10 @@ window.loginWithGoogle = async function () {
     setTimeout(() => {
       window.location.href = "index.html";
     }, 500);
-  } catch (err) {
-    console.error("Google login error:", err);
+  } catch (error) {
+    console.error("Google login error:", error);
 
-    const message = getFriendlyGoogleMessage(err);
+    const message = getFriendlyGoogleMessage(error);
 
     if (loginMessage) {
       loginMessage.textContent = message;
@@ -241,37 +220,35 @@ window.loginWithGoogle = async function () {
       signupMessage.textContent = message;
       signupMessage.style.color = "red";
     }
+
+    alert("Google login failed: " + error.message);
   }
 };
 
-/* ================= USER SESSION ================= */
-function setupAuthState() {
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      sessionStorage.removeItem(USER_KEY);
-      return;
+/* ================= AUTH STATE ================= */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    sessionStorage.removeItem(USER_KEY);
+    return;
+  }
+
+  try {
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      sessionStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
+    } else {
+      sessionStorage.setItem(USER_KEY, JSON.stringify({
+        uid: user.uid,
+        name: user.displayName || "User",
+        email: user.email || ""
+      }));
     }
-
-    try {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        sessionStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
-      } else {
-        const fallbackUser = {
-          uid: user.uid,
-          name: user.displayName || "User",
-          email: user.email || ""
-        };
-
-        sessionStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
-      }
-    } catch (err) {
-      console.error("User session error:", err);
-    }
-  });
-}
+  } catch (err) {
+    console.error("Auth state error:", err);
+  }
+});
 
 /* ================= LOGOUT ================= */
 window.logoutUser = async function () {
@@ -293,7 +270,6 @@ window.saveOrderToFirebase = async function (orderData) {
       ...orderData,
       firebaseCreatedAt: serverTimestamp()
     });
-
     return docRef.id;
   } catch (err) {
     console.error("Error saving order:", err);
@@ -333,6 +309,8 @@ function getFriendlyGoogleMessage(error) {
       return "Popup was blocked by the browser. Please allow popups.";
     case "auth/cancelled-popup-request":
       return "Google sign-in was cancelled.";
+    case "auth/unauthorized-domain":
+      return "This domain is not authorized in Firebase.";
     default:
       return "Google login failed. Please try again.";
   }
