@@ -370,7 +370,7 @@ function updateUserDisplay() {
 
   if (user) {
     if (userNameEl) {
-      userNameEl.textContent = `Hi, ${user.name || "User"}`;
+      userNameEl.textContent = user.name || "User";
     }
 
     if (guestSection) {
