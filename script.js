@@ -96,13 +96,8 @@ function updateCartCount() {
   const desktopCount = document.getElementById("cart-count");
   const mobileCount = document.getElementById("cart-count-mobile");
 
-  if (desktopCount) {
-    desktopCount.textContent = totalItems;
-  }
-
-  if (mobileCount) {
-    mobileCount.textContent = totalItems;
-  }
+  if (desktopCount) desktopCount.textContent = totalItems;
+  if (mobileCount) mobileCount.textContent = totalItems;
 }
 
 updateCartCount();
@@ -162,9 +157,7 @@ function renderCartPage() {
     return;
   }
 
-  if (emptyCart) {
-    emptyCart.style.display = "none";
-  }
+  if (emptyCart) emptyCart.style.display = "none";
 
   let total = 0;
 
@@ -369,25 +362,12 @@ function updateUserDisplay() {
   const userSection = document.getElementById("userSection");
 
   if (user) {
-    if (userNameEl) {
-      userNameEl.textContent = user.name || "User";
-    }
-
-    if (guestSection) {
-      guestSection.style.display = "none";
-    }
-
-    if (userSection) {
-      userSection.style.display = "flex";
-    }
+    if (userNameEl) userNameEl.textContent = user.name || "User";
+    if (guestSection) guestSection.style.display = "none";
+    if (userSection) userSection.style.display = "flex";
   } else {
-    if (guestSection) {
-      guestSection.style.display = "block";
-    }
-
-    if (userSection) {
-      userSection.style.display = "none";
-    }
+    if (guestSection) guestSection.style.display = "block";
+    if (userSection) userSection.style.display = "none";
   }
 }
 
