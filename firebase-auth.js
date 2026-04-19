@@ -13,9 +13,7 @@ import {
   doc,
   setDoc,
   getDoc,
-  serverTimestamp,
-  collection,
-  addDoc
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 /* ================= FIREBASE CONFIG ================= */
@@ -34,7 +32,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 /* ================= ADMIN EMAIL ================= */
-const ADMIN_EMAIL = "microgreeney@gmail.com"; // change if needed
+const ADMIN_EMAIL = "microgreeney@gmail.com";
 
 /* ================= GOOGLE PROVIDER ================= */
 const googleProvider = new GoogleAuthProvider();
@@ -218,15 +216,45 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+/* ================= ORDER HELPERS ================= */
+function generateOrderId() {
+  return "MG" + Date.now();
+}
+
+function getMalaysiaTimeString() {
+  const now = new Date();
+  return now.toLocaleString("en-MY", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+}
+
 /* ================= SAVE ORDER TO FIREBASE ================= */
 window.saveOrderToFirebase = async function (orderData) {
   try {
-    const docRef = await addDoc(collection(db, "orders"), {
-      ...orderData,
-      firebaseCreatedAt: serverTimestamp()
-    });
+    const orderId = generateOrderId();
 
-    return docRef.id;
+    const finalOrderData = {
+      ...orderData,
+      orderId: orderId,
+      status: orderData.status || "Pending",
+      timeline: [
+        {
+          status: orderData.status || "Pending",
+          time: getMalaysiaTimeString()
+        }
+      ],
+      firebaseCreatedAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+
+    await setDoc(doc(db, "orders", orderId), finalOrderData);
+
+    return orderId;
   } catch (error) {
     console.error("Error saving order:", error);
     return null;
