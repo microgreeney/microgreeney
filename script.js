@@ -182,7 +182,7 @@ function renderCartPage() {
         <small>RM ${formatPrice(item.price)} each</small>
       </div>
 
-      <div style="display:flex; align-items:center; gap:10px;">
+      <div class="cart-qty-controls" style="display:flex; align-items:center; gap:10px;">
         <button class="btn btn-outline cart-minus" type="button">-</button>
         <span>${quantity}</span>
         <button class="btn btn-outline cart-plus" type="button">+</button>
