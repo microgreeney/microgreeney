@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Shop | Microgreeney</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,109 +28,129 @@
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
+          <a href="login.html" class="btn btn-outline small-btn">
             Login / Signup
           </a>
         </div>
 
-        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+        <div id="userSection" style="display:none; align-items:center; gap:12px;">
           <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
-            Logout
-          </button>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
         </div>
       </nav>
 
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+        <a href="cart.html" class="cart-icon-mobile">
           🛒 <span id="cart-count-mobile">0</span>
         </a>
-        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle">☰</button>
       </div>
     </div>
   </header>
 
   <main>
     <section class="page-hero compact">
-      <div class="container">
-        <span class="eyebrow">Shop Fresh</span>
-        <h1>Premium indoor-grown microgreens.</h1>
-        <p>Choose your favorite microgreens and enjoy fresh harvests packed with flavor and nutrition.</p>
+      <div class="container reveal">
+        <span class="eyebrow">Shop</span>
+        <h1>Browse our fresh microgreens</h1>
+        <p>Choose from our selection of freshly harvested microgreens grown indoors.</p>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section reveal">
       <div class="container">
         <div class="product-grid">
+
+          <!-- Product 1 -->
           <article class="shop-card">
             <div class="product-top">🌻</div>
             <h3>Sunflower Microgreens</h3>
-            <p>Crunchy, mild, and nutty. Great for salads, wraps, and snacking.</p>
+            <p>Crunchy, nutty, and rich in nutrients.</p>
             <div class="price-row">
-              <span>RM12 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Sunflower Microgreens" data-price="12">
+              <span>RM12</span>
+              <button class="btn btn-primary add-to-cart"
+                data-name="Sunflower Microgreens"
+                data-price="12">
                 Add to Cart
               </button>
             </div>
           </article>
 
+          <!-- Product 2 -->
           <article class="shop-card">
             <div class="product-top">🌶️</div>
             <h3>Radish Microgreens</h3>
-            <p>Peppery and vibrant. Perfect for sandwiches, bowls, and garnishes.</p>
+            <p>Peppery flavor, perfect for salads and dishes.</p>
             <div class="price-row">
-              <span>RM10 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Radish Microgreens" data-price="10">
+              <span>RM10</span>
+              <button class="btn btn-primary add-to-cart"
+                data-name="Radish Microgreens"
+                data-price="10">
                 Add to Cart
               </button>
             </div>
           </article>
 
+          <!-- Product 3 -->
           <article class="shop-card">
             <div class="product-top">🌿</div>
             <h3>Broccoli Microgreens</h3>
-            <p>Mild, fresh, and easy to pair with many healthy meals.</p>
+            <p>Mild taste with powerful health benefits.</p>
             <div class="price-row">
-              <span>RM11 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Broccoli Microgreens" data-price="11">
+              <span>RM11</span>
+              <button class="btn btn-primary add-to-cart"
+                data-name="Broccoli Microgreens"
+                data-price="11">
                 Add to Cart
               </button>
             </div>
           </article>
 
+          <!-- Product 4 -->
           <article class="shop-card">
             <div class="product-top">🍃</div>
-            <h3>Pea Shoots Microgreens</h3>
-            <p>Tender, juicy, and slightly sweet. Excellent for salads and stir fry.</p>
+            <h3>Pea Shoots</h3>
+            <p>Sweet, tender, and perfect for stir-fry.</p>
             <div class="price-row">
-              <span>RM13 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Pea Shoots Microgreens" data-price="13">
+              <span>RM13</span>
+              <button class="btn btn-primary add-to-cart"
+                data-name="Pea Shoots"
+                data-price="13">
                 Add to Cart
               </button>
             </div>
           </article>
 
+          <!-- Product 5 -->
           <article class="shop-card">
             <div class="product-top">🥬</div>
-            <h3>Mixed Microgreens</h3>
-            <p>A colorful mix for customers who want variety in one fresh pack.</p>
+            <h3>Kale Microgreens</h3>
+            <p>Loaded with antioxidants and nutrients.</p>
             <div class="price-row">
-              <span>RM15 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Mixed Microgreens" data-price="15">
+              <span>RM12</span>
+              <button class="btn btn-primary add-to-cart"
+                data-name="Kale Microgreens"
+                data-price="12">
                 Add to Cart
               </button>
             </div>
           </article>
 
+          <!-- Product 6 -->
           <article class="shop-card">
-            <div class="product-top">🏪</div>
-            <h3>Wholesale Supply</h3>
-            <p>Bulk supply available for cafes, restaurants, and health food businesses.</p>
+            <div class="product-top">🌾</div>
+            <h3>Wheatgrass</h3>
+            <p>Fresh juice ingredient packed with vitamins.</p>
             <div class="price-row">
-              <span>Custom Quote</span>
-              <a href="contact.html" class="btn btn-outline">Enquire</a>
+              <span>RM15</span>
+              <button class="btn btn-primary add-to-cart"
+                data-name="Wheatgrass"
+                data-price="15">
+                Add to Cart
+              </button>
             </div>
           </article>
+
         </div>
       </div>
     </section>
@@ -140,7 +160,7 @@
     <div class="container footer-grid">
       <div>
         <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+        <p>Fresh indoor-grown microgreens for healthier meals.</p>
       </div>
 
       <div>
