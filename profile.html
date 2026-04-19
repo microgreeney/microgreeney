@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile | Microgreeney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🌱</span>
+        <span>Microgreeney</span>
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+        <a href="track.html">Track Order</a>
+        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+
+        <a href="cart.html" class="cart-btn">
+          🛒 Cart <span id="cart-count">0</span>
+        </a>
+
+        <div id="guestSection">
+          <a href="login.html" class="btn btn-outline small-btn">
+            Login / Signup
+          </a>
+        </div>
+
+        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+          <button id="accountBtn" class="account-btn" type="button">
+            <span id="userName"></span>
+            <span class="account-caret">▼</span>
+          </button>
+
+          <div id="accountDropdown" class="account-dropdown-menu">
+            <a href="profile.html">Profile</a>
+            <a href="my-orders.html">My Orders</a>
+            <button onclick="logoutUser()" type="button">Logout</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon-mobile">
+          🛒 <span id="cart-count-mobile">0</span>
+        </a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-title reveal center">
+          <span class="eyebrow">User Account</span>
+          <h1>My Profile</h1>
+          <p class="hero-text">View your account information and keep your details up to date.</p>
+        </div>
+
+        <div class="profile-wrap reveal">
+          <div class="profile-card">
+            <div class="profile-top">
+              <div class="profile-avatar" id="profileAvatar">U</div>
+
+              <div>
+                <h2 id="profileDisplayName">User</h2>
+                <p id="profileEmailText">-</p>
+              </div>
+            </div>
+
+            <form id="profileForm" class="profile-form">
+              <div class="form-group">
+                <label for="profileName">Full Name</label>
+                <input type="text" id="profileName" placeholder="Enter your full name" />
+              </div>
+
+              <div class="form-group">
+                <label for="profileEmail">Email</label>
+                <input type="email" id="profileEmail" placeholder="Your email" disabled />
+              </div>
+
+              <div class="form-group">
+                <label for="profilePhone">Phone Number</label>
+                <input type="text" id="profilePhone" placeholder="Enter your phone number" />
+              </div>
+
+              <div class="form-group">
+                <label for="profileAddress">Address</label>
+                <textarea id="profileAddress" rows="4" placeholder="Enter your address"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                Save Profile
+              </button>
+
+              <p id="profileMessage" class="form-note"></p>
+            </form>
+          </div>
+
+          <div class="profile-side-card">
+            <h3>Quick Access</h3>
+            <div class="profile-quick-links">
+              <a href="my-orders.html" class="btn btn-outline full-btn">My Orders</a>
+              <a href="track.html" class="btn btn-outline full-btn">Track Order</a>
+              <a href="shop.html" class="btn btn-primary full-btn">Shop Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Microgreeney</h3>
+        <p>Fresh indoor-grown microgreens for healthier meals.</p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="login.html">Signup</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Microgreeney. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script type="module" src="firebase-auth.js"></script>
+  <script type="module" src="profile.js"></script>
+</body>
+</html>
