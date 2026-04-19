@@ -162,7 +162,7 @@ if (loginForm) {
 /* ================= USER SESSION ================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(USER_KEY);
     return;
   }
 
@@ -171,7 +171,7 @@ onAuthStateChanged(auth, async (user) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      localStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
+      sessionStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
     } else {
       const fallbackUser = {
         uid: user.uid,
@@ -179,7 +179,7 @@ onAuthStateChanged(auth, async (user) => {
         email: user.email || ""
       };
 
-      localStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
+      sessionStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
     }
   } catch (err) {
     console.error("User session error:", err);
@@ -194,7 +194,8 @@ window.logoutUser = async function () {
     console.error("Logout error:", err);
   }
 
-  localStorage.removeItem(USER_KEY);
+  sessionStorage.removeItem(USER_KEY);
+  sessionStorage.removeItem("microgreeney_cart");
   window.location.href = "login.html";
 };
 
