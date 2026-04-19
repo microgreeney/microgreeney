@@ -60,10 +60,11 @@ function getStatusClass(status) {
 
 function renderOrder(data) {
   resultOrderId.textContent = "Order ID: " + (data.orderId || "-");
-  resultDate.textContent = "Created: " + formatDate(data.createdAt || data.firebaseCreatedAt);
+  resultDate.textContent = "Created: " + formatDate(data.firebaseCreatedAt || data.createdAt);
 
-  resultStatus.textContent = data.status || "Pending";
-  resultStatus.className = "status-badge " + getStatusClass(data.status);
+  const currentStatus = data.status || "Pending";
+  resultStatus.textContent = currentStatus;
+  resultStatus.className = `status-badge ${getStatusClass(currentStatus)}`;
 
   resultName.textContent = data.customerName || "-";
   resultPhone.textContent = data.customerPhone || "-";
@@ -72,32 +73,48 @@ function renderOrder(data) {
 
   resultItems.innerHTML = "";
 
-  (data.items || []).forEach((item) => {
-    const div = document.createElement("div");
-    div.classList.add("track-item-row");
-    div.innerHTML = `
-      <span>${item.name} x${item.quantity}</span>
-      <span>RM ${formatPrice(item.subtotal)}</span>
-    `;
-    resultItems.appendChild(div);
-  });
+  if (Array.isArray(data.items) && data.items.length > 0) {
+    data.items.forEach((item) => {
+      const row = document.createElement("div");
+      row.classList.add("track-item-row");
+      row.innerHTML = `
+        <span>${item.name} x${item.quantity || 1}</span>
+        <span>RM ${formatPrice(item.subtotal)}</span>
+      `;
+      resultItems.appendChild(row);
+    });
+  } else {
+    resultItems.innerHTML = `<div class="track-item-row"><span>No items</span><span>-</span></div>`;
+  }
 
   resultTotal.textContent = formatPrice(data.total);
 
   resultTimeline.innerHTML = "";
 
-  (data.timeline || []).forEach((step) => {
-    const div = document.createElement("div");
-    div.classList.add("timeline-item");
-    div.innerHTML = `
-      <div class="timeline-dot"></div>
-      <div>
-        <strong>${step.status}</strong>
-        <p>${step.time}</p>
+  if (Array.isArray(data.timeline) && data.timeline.length > 0) {
+    data.timeline.forEach((step) => {
+      const item = document.createElement("div");
+      item.classList.add("timeline-item");
+      item.innerHTML = `
+        <div class="timeline-dot"></div>
+        <div>
+          <strong>${step.status || "-"}</strong>
+          <p>${step.time || "-"}</p>
+        </div>
+      `;
+      resultTimeline.appendChild(item);
+    });
+  } else {
+    resultTimeline.innerHTML = `
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <strong>${currentStatus}</strong>
+          <p>No timeline updates yet.</p>
+        </div>
       </div>
     `;
-    resultTimeline.appendChild(div);
-  });
+  }
 
   resultBox.style.display = "block";
 }
@@ -144,10 +161,19 @@ if (trackBtn) {
   });
 }
 
+if (orderInput) {
+  orderInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      trackOrder(orderInput.value.trim());
+    }
+  });
+}
+
 const params = new URLSearchParams(window.location.search);
 const urlOrderId = params.get("orderId");
 
-if (urlOrderId) {
+if (urlOrderId && orderInput) {
   orderInput.value = urlOrderId;
   trackOrder(urlOrderId);
 }
