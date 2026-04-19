@@ -5,19 +5,19 @@ const USER_KEY = "microgreeney_user";
 /* ================= HELPERS ================= */
 function getCart() {
   try {
-    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+    return JSON.parse(sessionStorage.getItem(CART_KEY)) || [];
   } catch (error) {
     return [];
   }
 }
 
 function saveCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 
 function getUser() {
   try {
-    return JSON.parse(localStorage.getItem(USER_KEY)) || null;
+    return JSON.parse(sessionStorage.getItem(USER_KEY)) || null;
   } catch (error) {
     return null;
   }
@@ -107,15 +107,6 @@ function updateCartCount() {
 
 updateCartCount();
 
-window.addEventListener("storage", (event) => {
-  if (event.key === CART_KEY || event.key === USER_KEY) {
-    cart = getCart();
-    updateCartCount();
-    updateUserDisplay();
-    renderCartPage();
-  }
-});
-
 /* ================= ADD TO CART ================= */
 const cartButtons = document.querySelectorAll(".add-to-cart");
 
@@ -171,7 +162,9 @@ function renderCartPage() {
     return;
   }
 
-  if (emptyCart) emptyCart.style.display = "none";
+  if (emptyCart) {
+    emptyCart.style.display = "none";
+  }
 
   let total = 0;
 
@@ -362,7 +355,7 @@ window.checkoutWhatsApp = async function () {
   const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   window.open(whatsappURL, "_blank");
 
-  localStorage.removeItem(CART_KEY);
+  sessionStorage.removeItem(CART_KEY);
   cart = [];
   updateCartCount();
   renderCartPage();
