@@ -271,3 +271,30 @@ window.saveOrderToFirebase = async function (orderData) {
 };
 
 export { auth, db };
+
+/* ================= FORGOT PASSWORD ================= */
+const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+
+if (forgotPasswordLink) {
+  forgotPasswordLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail")?.value.trim();
+    const message = document.getElementById("loginMessage");
+
+    if (!email) {
+      if (message) message.textContent = "Please enter your email first.";
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      if (message) {
+        message.textContent = "Password reset email sent. Check your inbox.";
+      }
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      if (message) message.textContent = error.message;
+    }
+  });
+}
