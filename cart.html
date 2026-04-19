@@ -4,167 +4,174 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cart | Microgreeney</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="index.html" class="logo">
-        <span class="logo-mark">🌱</span>
-        <span>Microgreeney</span>
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container nav-wrap">
+
+    <a href="index.html" class="logo">
+      <span class="logo-mark">🌱</span>
+      <span>Microgreeney</span>
+    </a>
+
+    <nav class="nav-menu" id="navMenu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="track.html">Track Order</a>
+
+      <a href="cart.html" class="cart-btn active">
+        🛒 Cart <span id="cart-count">0</span>
       </a>
 
-      <nav class="nav-menu" id="navMenu">
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="shop.html">Shop</a>
-        <a href="contact.html">Contact</a>
-        <a href="track.html">Track Order</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
-
-        <a href="cart.html" class="cart-btn active">
-          🛒 Cart <span id="cart-count">0</span>
+      <!-- LOGIN -->
+      <div id="guestSection">
+        <a href="login.html" class="btn btn-outline small-btn">
+          Login / Signup
         </a>
+      </div>
 
-        <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn">
-            Login / Signup
-          </a>
+      <!-- USER DROPDOWN -->
+      <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+        <button id="accountBtn" class="account-btn" type="button">
+          <span id="userName"></span>
+          <span class="account-caret">▼</span>
+        </button>
+
+        <div id="accountDropdown" class="account-dropdown-menu">
+          <a href="profile.html">👤 Profile</a>
+          <a href="my-orders.html">📦 My Orders</a>
+          <button onclick="logoutUser()" type="button">🚪 Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="nav-right">
+      <a href="cart.html" class="cart-icon-mobile">
+        🛒 <span id="cart-count-mobile">0</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="cart-section">
+
+  <div class="container">
+
+    <div class="cart-page-header">
+      <div>
+        <span class="eyebrow">Your Cart</span>
+        <h1>Review your order</h1>
+        <p>Check your items before placing the order.</p>
+      </div>
+    </div>
+
+    <div class="cart-layout">
+
+      <!-- LEFT: ITEMS -->
+      <div class="cart-list-card">
+        <div class="cart-card-header">
+          <h2>Items</h2>
+          <p>Your selected microgreens</p>
         </div>
 
-        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
-          <button id="accountBtn" class="account-btn" type="button">
-            <span id="userName"></span>
-            <span class="account-caret">▼</span>
+        <div id="cart-items">
+          <div class="empty-cart-message">Your cart is empty.</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: SUMMARY -->
+      <div class="cart-summary-card">
+
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Total</span>
+          <strong id="cart-total">RM 0.00</strong>
+        </div>
+
+        <div class="summary-note">
+          Orders will be confirmed via WhatsApp after checkout.
+        </div>
+
+        <!-- CUSTOMER FORM -->
+        <div class="cart-customer-form">
+          <h3>Customer Info</h3>
+
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="customerName" placeholder="Your Name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="customerPhone" placeholder="Your Phone" required>
+          </div>
+
+          <div class="form-group">
+            <label>Address</label>
+            <textarea id="customerAddress" rows="3" placeholder="Delivery Address" required></textarea>
+          </div>
+
+          <button class="btn btn-primary cart-checkout-btn" onclick="checkoutWhatsApp()">
+            Place Order (WhatsApp)
           </button>
 
-          <div id="accountDropdown" class="account-dropdown-menu">
-            <a href="profile.html">👤 Profile</a>
-            <a href="my-orders.html">📦 My Orders</a>
-            <button onclick="logoutUser()" type="button">🚪 Logout</button>
-          </div>
-        </div>
-      </nav>
-
-      <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile">
-          🛒 <span id="cart-count-mobile">0</span>
-        </a>
-        <button class="menu-toggle" id="menuToggle">☰</button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="section cart-section">
-      <div class="container">
-
-        <div class="cart-page-header reveal">
-          <div>
-            <span class="eyebrow">Your Cart</span>
-            <h1>Review your order</h1>
-            <p>Check your selected items and complete your order through WhatsApp.</p>
-          </div>
-
-          <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
+          <p class="checkout-help-text">
+            You will be redirected to WhatsApp to confirm your order.
+          </p>
         </div>
 
-        <div class="cart-layout">
-
-          <div class="cart-main reveal">
-            <div class="cart-list-card">
-              <div class="cart-card-header">
-                <h2>Items</h2>
-                <p>Your selected products</p>
-              </div>
-
-              <div id="cart-items"></div>
-
-              <p id="empty-cart" class="empty-cart-message" style="display:none;">
-                Your cart is empty 🌱
-              </p>
-            </div>
-          </div>
-
-          <aside class="cart-sidebar reveal">
-            <div class="cart-summary-card">
-              <h2>Order Summary</h2>
-
-              <div class="summary-row">
-                <span>Total</span>
-                <strong>RM <span id="cart-total">0.00</span></strong>
-              </div>
-
-              <div class="summary-note">
-                Fresh indoor-grown microgreens prepared with care and packed for quality.
-              </div>
-
-              <div class="contact-form cart-customer-form">
-                <h3>Customer Details</h3>
-
-                <div class="form-group">
-                  <label for="customerName">Name</label>
-                  <input type="text" id="customerName" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="customerPhone">Phone</label>
-                  <input type="text" id="customerPhone" required />
-                </div>
-
-                <div class="form-group">
-                  <label for="customerAddress">Address</label>
-                  <textarea id="customerAddress" rows="4" required></textarea>
-                </div>
-              </div>
-
-              <button class="btn btn-primary cart-checkout-btn" onclick="checkoutWhatsApp()">
-                Checkout via WhatsApp
-              </button>
-
-              <p class="checkout-help-text">
-                Your order will be saved first, then you’ll be redirected to WhatsApp to confirm it.
-              </p>
-            </div>
-          </aside>
-
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals.</p>
       </div>
 
-      <div>
-        <h4>Quick Links</h4>
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="shop.html">Shop</a>
-        <a href="contact.html">Contact</a>
-      </div>
-
-      <div>
-        <h4>Account</h4>
-        <a href="login.html">Login</a>
-        <a href="login.html">Signup</a>
-      </div>
     </div>
 
-    <div class="footer-bottom">
-      <p>© 2026 Microgreeney. All rights reserved.</p>
-    </div>
-  </footer>
+  </div>
 
-  <script src="script.js"></script>
-  <script type="module" src="firebase-auth.js"></script>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h3>Microgreeney</h3>
+      <p>Fresh indoor-grown microgreens for healthier meals.</p>
+    </div>
+
+    <div>
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+    </div>
+
+    <div>
+      <h4>Account</h4>
+      <a href="login.html">Login</a>
+      <a href="login.html">Signup</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Microgreeney. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script type="module" src="firebase-auth.js"></script>
+
 </body>
 </html>
