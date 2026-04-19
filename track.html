@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Order | Microgreeney</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🌱</span>
+        <span>Microgreeney</span>
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+        <a href="track.html" class="active">Track Order</a>
+        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+
+        <a href="cart.html" class="cart-btn">
+          🛒 Cart <span id="cart-count">0</span>
+        </a>
+
+        <div id="guestSection">
+          <a href="login.html" class="btn btn-outline small-btn">
+            Login / Signup
+          </a>
+        </div>
+
+        <div id="userSection" style="display:none; align-items:center; gap:12px;">
+          <span id="userName"></span>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
+        </div>
+      </nav>
+
+      <div class="nav-right">
+        <a href="cart.html" class="cart-icon-mobile">
+          🛒 <span id="cart-count-mobile">0</span>
+        </a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-title reveal center">
+          <span class="eyebrow">Order Tracking</span>
+          <h1>Track Your Order</h1>
+          <p class="hero-text">Enter your Order ID to check the latest order status.</p>
+        </div>
+
+        <div class="track-order-wrap reveal">
+          <div class="track-search-card">
+            <div class="form-group">
+              <label for="trackOrderId">Order ID</label>
+              <input
+                type="text"
+                id="trackOrderId"
+                placeholder="Example: MG1745061234567"
+              />
+            </div>
+
+            <button id="trackOrderBtn" class="btn btn-primary full-btn" type="button">
+              Track Order
+            </button>
+
+            <p id="trackMessage" class="form-note" style="margin-top: 14px;"></p>
+          </div>
+
+          <div id="trackResult" class="track-result-card" style="display:none;">
+            <div class="track-result-header">
+              <div>
+                <h2 id="resultOrderId">Order ID: -</h2>
+                <p id="resultDate">Created: -</p>
+              </div>
+              <span id="resultStatus" class="status-badge">Pending</span>
+            </div>
+
+            <div class="track-grid">
+              <div class="track-info-box">
+                <h3>Customer Details</h3>
+                <p><strong>Name:</strong> <span id="resultName">-</span></p>
+                <p><strong>Phone:</strong> <span id="resultPhone">-</span></p>
+                <p><strong>Address:</strong> <span id="resultAddress">-</span></p>
+                <p><strong>Email:</strong> <span id="resultEmail">-</span></p>
+              </div>
+
+              <div class="track-info-box">
+                <h3>Order Summary</h3>
+                <div id="resultItems"></div>
+                <div class="track-total-row">
+                  <strong>Total:</strong>
+                  <strong>RM <span id="resultTotal">0.00</span></strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="track-timeline-box">
+              <h3>Order Timeline</h3>
+              <div id="resultTimeline" class="timeline-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Microgreeney</h3>
+        <p>Fresh indoor-grown microgreens for healthier meals.</p>
+      </div>
+
+      <div>
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="shop.html">Shop</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div>
+        <h4>Account</h4>
+        <a href="login.html">Login</a>
+        <a href="login.html">Signup</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Microgreeney. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script type="module" src="firebase-auth.js"></script>
+  <script type="module" src="track.js"></script>
+</body>
+</html>
