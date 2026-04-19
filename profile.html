@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -42,9 +43,9 @@
           </button>
 
           <div id="accountDropdown" class="account-dropdown-menu">
-            <a href="profile.html">Profile</a>
-            <a href="my-orders.html">My Orders</a>
-            <button onclick="logoutUser()" type="button">Logout</button>
+            <a href="profile.html">👤 Profile</a>
+            <a href="my-orders.html">📦 My Orders</a>
+            <button onclick="logoutUser()" type="button">🚪 Logout</button>
           </div>
         </div>
       </nav>
@@ -61,61 +62,51 @@
   <main>
     <section class="section">
       <div class="container">
+
         <div class="section-title reveal center">
-          <span class="eyebrow">User Account</span>
+          <span class="eyebrow">Account</span>
           <h1>My Profile</h1>
-          <p class="hero-text">View your account information and keep your details up to date.</p>
+          <p class="hero-text">Manage your personal details and delivery information.</p>
         </div>
 
-        <div class="profile-wrap reveal">
+        <div class="profile-grid reveal">
+
+          <!-- PROFILE INFO -->
           <div class="profile-card">
-            <div class="profile-top">
-              <div class="profile-avatar" id="profileAvatar">U</div>
+            <h2>Account Info</h2>
 
-              <div>
-                <h2 id="profileDisplayName">User</h2>
-                <p id="profileEmailText">-</p>
-              </div>
-            </div>
-
-            <form id="profileForm" class="profile-form">
-              <div class="form-group">
-                <label for="profileName">Full Name</label>
-                <input type="text" id="profileName" placeholder="Enter your full name" />
-              </div>
-
-              <div class="form-group">
-                <label for="profileEmail">Email</label>
-                <input type="email" id="profileEmail" placeholder="Your email" disabled />
-              </div>
-
-              <div class="form-group">
-                <label for="profilePhone">Phone Number</label>
-                <input type="text" id="profilePhone" placeholder="Enter your phone number" />
-              </div>
-
-              <div class="form-group">
-                <label for="profileAddress">Address</label>
-                <textarea id="profileAddress" rows="4" placeholder="Enter your address"></textarea>
-              </div>
-
-              <button type="submit" class="btn btn-primary">
-                Save Profile
-              </button>
-
-              <p id="profileMessage" class="form-note"></p>
-            </form>
+            <p><strong>Name:</strong> <span id="profileName">-</span></p>
+            <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
           </div>
 
-          <div class="profile-side-card">
-            <h3>Quick Access</h3>
-            <div class="profile-quick-links">
-              <a href="my-orders.html" class="btn btn-outline full-btn">My Orders</a>
-              <a href="track.html" class="btn btn-outline full-btn">Track Order</a>
-              <a href="shop.html" class="btn btn-primary full-btn">Shop Now</a>
+          <!-- EDIT PROFILE -->
+          <div class="profile-card">
+            <h2>Update Details</h2>
+
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="updateName" placeholder="Enter your name">
             </div>
+
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="text" id="updatePhone" placeholder="Enter phone number">
+            </div>
+
+            <div class="form-group">
+              <label>Address</label>
+              <textarea id="updateAddress" rows="4" placeholder="Enter address"></textarea>
+            </div>
+
+            <button class="btn btn-primary full-btn" onclick="updateProfile()">
+              Save Changes
+            </button>
+
+            <p id="profileMessage" class="form-note"></p>
           </div>
+
         </div>
+
       </div>
     </section>
   </main>
