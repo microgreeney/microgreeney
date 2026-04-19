@@ -5,19 +5,16 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  setPersistence,
-  browserSessionPersistence,
   GoogleAuthProvider,
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+
 import {
   getFirestore,
   doc,
   setDoc,
   getDoc,
-  serverTimestamp,
-  collection,
-  addDoc
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
 /* ================= FIREBASE CONFIG ================= */
@@ -30,148 +27,18 @@ const firebaseConfig = {
   appId: "1:416610459992:web:898a7b44460cb04750452d"
 };
 
-/* ================= INIT ================= */
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+/* ================= ADMIN EMAIL ================= */
+const ADMIN_EMAIL = "microgreeney@gmail.com"; // 🔥 change if needed
+
+/* ================= GOOGLE PROVIDER ================= */
 const googleProvider = new GoogleAuthProvider();
-
-/* ================= SESSION ONLY ================= */
-await setPersistence(auth, browserSessionPersistence);
-
-/* ================= STORAGE KEY ================= */
-const USER_KEY = "microgreeney_user";
-
-/* ================= ELEMENTS ================= */
-const signupForm = document.getElementById("signupForm");
-const loginForm = document.getElementById("loginForm");
-const tabButtons = document.querySelectorAll(".tab-btn");
-
-/* ================= TAB SWITCH ================= */
-if (tabButtons.length && loginForm && signupForm) {
-  tabButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      tabButtons.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      const target = btn.dataset.tab;
-
-      if (target === "loginForm") {
-        loginForm.classList.add("active-form");
-        loginForm.classList.remove("hidden-form");
-        signupForm.classList.add("hidden-form");
-        signupForm.classList.remove("active-form");
-      } else {
-        signupForm.classList.add("active-form");
-        signupForm.classList.remove("hidden-form");
-        loginForm.classList.add("hidden-form");
-        loginForm.classList.remove("active-form");
-      }
-    });
-  });
-}
-
-/* ================= SIGNUP ================= */
-if (signupForm) {
-  signupForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const nameInput = document.getElementById("signupName");
-    const emailInput = document.getElementById("signupEmail");
-    const passwordInput = document.getElementById("signupPassword");
-    const msg = document.getElementById("signupMessage");
-
-    const name = nameInput ? nameInput.value.trim() : "";
-    const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
-    const password = passwordInput ? passwordInput.value.trim() : "";
-
-    if (!name || !email || !password) {
-      if (msg) {
-        msg.textContent = "Please fill in all fields.";
-        msg.style.color = "red";
-      }
-      return;
-    }
-
-    try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-
-      await setDoc(doc(db, "users", userCred.user.uid), {
-        uid: userCred.user.uid,
-        name,
-        email,
-        createdAt: serverTimestamp()
-      });
-
-      if (msg) {
-        msg.textContent = "Account created successfully! Please login.";
-        msg.style.color = "green";
-      }
-
-      signupForm.reset();
-
-      await signOut(auth);
-
-      const loginTab = document.querySelector('[data-tab="loginForm"]');
-      if (loginTab) {
-        loginTab.click();
-      }
-    } catch (err) {
-      console.error("Signup error:", err);
-      if (msg) {
-        msg.textContent = getFriendlyAuthMessage(err);
-        msg.style.color = "red";
-      }
-    }
-  });
-}
-
-/* ================= LOGIN ================= */
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const emailInput = document.getElementById("loginEmail");
-    const passwordInput = document.getElementById("loginPassword");
-    const msg = document.getElementById("loginMessage");
-
-    const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
-    const password = passwordInput ? passwordInput.value.trim() : "";
-
-    if (!email || !password) {
-      if (msg) {
-        msg.textContent = "Please enter email and password.";
-        msg.style.color = "red";
-      }
-      return;
-    }
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-
-      if (msg) {
-        msg.textContent = "Login successful!";
-        msg.style.color = "green";
-      }
-
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 700);
-    } catch (err) {
-      console.error("Login error:", err);
-      if (msg) {
-        msg.textContent = getFriendlyAuthMessage(err);
-        msg.style.color = "red";
-      }
-    }
-  });
-}
 
 /* ================= GOOGLE LOGIN ================= */
 window.loginWithGoogle = async function () {
-  const loginMessage = document.getElementById("loginMessage");
-  const signupMessage = document.getElementById("signupMessage");
-
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
@@ -188,130 +55,96 @@ window.loginWithGoogle = async function () {
       });
     }
 
-    sessionStorage.setItem(USER_KEY, JSON.stringify({
-      uid: user.uid,
-      name: user.displayName || "User",
-      email: user.email || ""
-    }));
+    alert("Login successful!");
+    window.location.href = "index.html";
 
-    if (loginMessage) {
-      loginMessage.textContent = "Google login successful!";
-      loginMessage.style.color = "green";
-    }
-
-    if (signupMessage) {
-      signupMessage.textContent = "";
-    }
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 500);
   } catch (error) {
-    console.error("Google login error:", error);
-
-    const message = getFriendlyGoogleMessage(error);
-
-    if (loginMessage) {
-      loginMessage.textContent = message;
-      loginMessage.style.color = "red";
-    }
-
-    if (signupMessage) {
-      signupMessage.textContent = message;
-      signupMessage.style.color = "red";
-    }
-
+    console.error(error);
     alert("Google login failed: " + error.message);
   }
 };
 
-/* ================= AUTH STATE ================= */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    sessionStorage.removeItem(USER_KEY);
-    return;
-  }
+/* ================= EMAIL LOGIN ================= */
+const loginForm = document.getElementById("loginForm");
 
-  try {
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    if (docSnap.exists()) {
-      sessionStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
-    } else {
-      sessionStorage.setItem(USER_KEY, JSON.stringify({
-        uid: user.uid,
-        name: user.displayName || "User",
-        email: user.email || ""
-      }));
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    const message = document.getElementById("loginMessage");
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      message.textContent = "Login successful!";
+      window.location.href = "index.html";
+    } catch (error) {
+      message.textContent = error.message;
     }
-  } catch (err) {
-    console.error("Auth state error:", err);
-  }
-});
+  });
+}
+
+/* ================= SIGNUP ================= */
+const signupForm = document.getElementById("signupForm");
+
+if (signupForm) {
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("signupName").value;
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+    const message = document.getElementById("signupMessage");
+
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        name: name,
+        email: email,
+        createdAt: serverTimestamp()
+      });
+
+      message.textContent = "Signup successful!";
+      window.location.href = "index.html";
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+}
 
 /* ================= LOGOUT ================= */
 window.logoutUser = async function () {
-  try {
-    await signOut(auth);
-  } catch (err) {
-    console.error("Logout error:", err);
-  }
-
-  sessionStorage.removeItem(USER_KEY);
-  sessionStorage.removeItem("microgreeney_cart");
+  await signOut(auth);
   window.location.href = "login.html";
 };
 
-/* ================= SAVE ORDER ================= */
-window.saveOrderToFirebase = async function (orderData) {
-  try {
-    const docRef = await addDoc(collection(db, "orders"), {
-      ...orderData,
-      firebaseCreatedAt: serverTimestamp()
-    });
-    return docRef.id;
-  } catch (err) {
-    console.error("Error saving order:", err);
-    return null;
+/* ================= AUTH STATE ================= */
+onAuthStateChanged(auth, (user) => {
+  const guestSection = document.getElementById("guestSection");
+  const userSection = document.getElementById("userSection");
+  const userNameEl = document.getElementById("userName");
+  const adminLink = document.getElementById("adminLink");
+
+  if (user) {
+    const name = user.displayName || user.email;
+
+    if (userNameEl) userNameEl.textContent = name;
+    if (guestSection) guestSection.style.display = "none";
+    if (userSection) userSection.style.display = "flex";
+
+    // 🔥 SHOW ADMIN ONLY FOR YOU
+    if (adminLink && user.email === ADMIN_EMAIL) {
+      adminLink.style.display = "inline-flex";
+    }
+
+  } else {
+    if (guestSection) guestSection.style.display = "block";
+    if (userSection) userSection.style.display = "none";
+
+    if (adminLink) adminLink.style.display = "none";
   }
-};
-
-/* ================= FRIENDLY AUTH MESSAGES ================= */
-function getFriendlyAuthMessage(error) {
-  const code = error?.code || "";
-
-  switch (code) {
-    case "auth/email-already-in-use":
-      return "This email is already registered.";
-    case "auth/invalid-email":
-      return "Please enter a valid email address.";
-    case "auth/weak-password":
-      return "Password should be at least 6 characters.";
-    case "auth/invalid-credential":
-    case "auth/user-not-found":
-    case "auth/wrong-password":
-      return "Incorrect email or password.";
-    case "auth/too-many-requests":
-      return "Too many attempts. Please try again later.";
-    default:
-      return error?.message || "Something went wrong. Please try again.";
-  }
-}
-
-function getFriendlyGoogleMessage(error) {
-  const code = error?.code || "";
-
-  switch (code) {
-    case "auth/popup-closed-by-user":
-      return "Google sign-in popup was closed.";
-    case "auth/popup-blocked":
-      return "Popup was blocked by the browser. Please allow popups.";
-    case "auth/cancelled-popup-request":
-      return "Google sign-in was cancelled.";
-    case "auth/unauthorized-domain":
-      return "This domain is not authorized in Firebase.";
-    default:
-      return "Google login failed. Please try again.";
-  }
-}
+});
