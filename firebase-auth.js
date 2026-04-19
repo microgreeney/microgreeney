@@ -260,3 +260,5 @@ window.saveOrderToFirebase = async function (orderData) {
     return null;
   }
 };
+
+export { auth, db };
