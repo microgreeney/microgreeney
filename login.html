@@ -53,7 +53,6 @@
     <section class="auth-section">
       <div class="container auth-wrap">
 
-        <!-- LEFT -->
         <div class="auth-intro reveal">
           <span class="eyebrow">Customer Account</span>
           <h1>Access your account</h1>
@@ -63,7 +62,6 @@
           </p>
         </div>
 
-        <!-- RIGHT -->
         <div class="auth-card reveal">
 
           <div class="tab-buttons">
@@ -71,7 +69,6 @@
             <button type="button" class="tab-btn" data-tab="signupForm">Signup</button>
           </div>
 
-          <!-- LOGIN -->
           <form id="loginForm" class="auth-form active-form">
             <div class="form-group">
               <label>Email</label>
@@ -89,14 +86,12 @@
 
             <p id="loginMessage" class="form-note"></p>
 
-            <!-- GOOGLE BUTTON -->
-            <button type="button" id="googleLoginBtn" class="google-btn" style="margin-top: 12px;">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+            <button type="button" class="google-btn" style="margin-top: 12px;" onclick="loginWithGoogle()">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
               Continue with Google
             </button>
           </form>
 
-          <!-- SIGNUP -->
           <form id="signupForm" class="auth-form hidden-form">
             <div class="form-group">
               <label>Name</label>
@@ -119,9 +114,8 @@
 
             <p id="signupMessage" class="form-note"></p>
 
-            <!-- GOOGLE BUTTON -->
-            <button type="button" id="googleSignupBtn" class="google-btn" style="margin-top: 12px;">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+            <button type="button" class="google-btn" style="margin-top: 12px;" onclick="loginWithGoogle()">
+              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
               Continue with Google
             </button>
           </form>
