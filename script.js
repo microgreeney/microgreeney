@@ -262,7 +262,7 @@ function autofillCustomerDetails() {
 
 autofillCustomerDetails();
 
-/* ================= WHATSAPP CHECKOUT ================= */
+/* ================= WHATSAPP CHECKOUT + TRACKING READY ================= */
 window.checkoutWhatsApp = async function () {
   const user = getUser();
   cart = getCart();
@@ -312,7 +312,7 @@ window.checkoutWhatsApp = async function () {
     customerAddress,
     items: orderItems,
     total,
-    status: "pending",
+    status: "Pending",
     createdAt: new Date().toISOString()
   };
 
@@ -322,6 +322,7 @@ window.checkoutWhatsApp = async function () {
     try {
       orderId = await window.saveOrderToFirebase(orderData);
     } catch (error) {
+      console.error("Save order error:", error);
       orderId = null;
     }
   }
@@ -352,6 +353,8 @@ window.checkoutWhatsApp = async function () {
   cart = [];
   updateCartCount();
   renderCartPage();
+
+  alert(`Order placed successfully! Your Order ID is ${orderId}`);
 };
 
 /* ================= USER DISPLAY ================= */
