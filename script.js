@@ -1,29 +1,77 @@
+/* ================= STORAGE KEYS ================= */
+const CART_KEY = "microgreeney_cart";
+const USER_KEY = "microgreeney_user";
+
+/* ================= HELPERS ================= */
+function getCart() {
+  try {
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem(USER_KEY)) || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function formatPrice(value) {
+  return Number(value).toFixed(2);
+}
+
+let cart = getCart();
+
 /* ================= NAVBAR ================= */
-const menuToggle = document.getElementById('menuToggle');
-const navMenu = document.getElementById('navMenu');
+const menuToggle = document.getElementById("menuToggle");
+const navMenu = document.getElementById("navMenu");
 
 if (menuToggle && navMenu) {
-  menuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('show');
+  menuToggle.addEventListener("click", () => {
+    navMenu.classList.toggle("show");
+  });
+
+  document.addEventListener("click", (e) => {
+    const clickedInsideMenu = navMenu.contains(e.target);
+    const clickedToggle = menuToggle.contains(e.target);
+
+    if (!clickedInsideMenu && !clickedToggle) {
+      navMenu.classList.remove("show");
+    }
+  });
+
+  navMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      navMenu.classList.remove("show");
+    });
   });
 }
 
 /* ================= CONTACT FORM ================= */
-const contactForm = document.getElementById('contactForm');
+const contactForm = document.getElementById("contactForm");
 
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const msg = document.getElementById('contactMessage');
+
+    const msg = document.getElementById("contactMessage");
     if (msg) {
-      msg.textContent = 'Thank you. Your message has been sent.';
+      msg.textContent = "Thank you. Your message has been sent.";
     }
+
     contactForm.reset();
   });
 }
 
 /* ================= REVEAL ANIMATION ================= */
-const reveals = document.querySelectorAll('.reveal');
+const reveals = document.querySelectorAll(".reveal");
 
 function revealOnScroll() {
   reveals.forEach((element) => {
@@ -31,270 +79,323 @@ function revealOnScroll() {
     const elementTop = element.getBoundingClientRect().top;
 
     if (elementTop < windowHeight - 100) {
-      element.classList.add('active');
+      element.classList.add("active");
     }
   });
 }
 
-window.addEventListener('scroll', revealOnScroll);
+window.addEventListener("scroll", revealOnScroll);
 revealOnScroll();
 
-/* ================= CART ================= */
-let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-
-const cartButtons = document.querySelectorAll('.add-to-cart');
-const cartItemsContainer = document.getElementById('cart-items');
-const cartTotalElement = document.getElementById('cart-total');
-const emptyCart = document.getElementById('empty-cart');
-
-function saveCart() {
-  sessionStorage.setItem('cart', JSON.stringify(cart));
-}
-
+/* ================= CART COUNT ================= */
 function updateCartCount() {
-  const desktopCount = document.getElementById('cart-count');
-  const mobileCount = document.getElementById('cart-count-mobile');
+  cart = getCart();
+
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  const desktopCount = document.getElementById("cart-count");
+  const mobileCount = document.getElementById("cart-count-mobile");
 
   if (desktopCount) {
-    desktopCount.textContent = cart.length;
+    desktopCount.textContent = totalItems;
   }
 
   if (mobileCount) {
-    mobileCount.textContent = cart.length;
+    mobileCount.textContent = totalItems;
   }
 }
 
 updateCartCount();
 
+window.addEventListener("storage", (event) => {
+  if (event.key === CART_KEY || event.key === USER_KEY) {
+    cart = getCart();
+    updateCartCount();
+    updateUserDisplay();
+    renderCartPage();
+  }
+});
+
+/* ================= ADD TO CART ================= */
+const cartButtons = document.querySelectorAll(".add-to-cart");
+
 cartButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const name = button.getAttribute('data-name');
-    const price = parseFloat(button.getAttribute('data-price'));
+  button.addEventListener("click", () => {
+    const name = button.getAttribute("data-name");
+    const price = parseFloat(button.getAttribute("data-price"));
 
-    if (!name || isNaN(price)) return;
+    if (!name || Number.isNaN(price)) return;
 
-    cart.push({ name, price });
-    saveCart();
+    cart = getCart();
+
+    const existingItem = cart.find(
+      (item) => item.name === name && Number(item.price) === price
+    );
+
+    if (existingItem) {
+      existingItem.quantity = (existingItem.quantity || 1) + 1;
+    } else {
+      cart.push({
+        name,
+        price,
+        quantity: 1
+      });
+    }
+
+    saveCart(cart);
     updateCartCount();
 
     const originalText = button.textContent;
-    button.textContent = 'Added';
+    button.textContent = "Added";
 
     setTimeout(() => {
       button.textContent = originalText;
-    }, 1500);
+    }, 1200);
   });
 });
 
-/* ================= DISPLAY CART ================= */
-if (cartItemsContainer && cartTotalElement) {
-  let total = 0;
-  cartItemsContainer.innerHTML = '';
+/* ================= CART PAGE ================= */
+const cartItemsContainer = document.getElementById("cart-items");
+const cartTotalElement = document.getElementById("cart-total");
+const emptyCart = document.getElementById("empty-cart");
+
+function renderCartPage() {
+  if (!cartItemsContainer || !cartTotalElement) return;
+
+  cart = getCart();
+  cartItemsContainer.innerHTML = "";
 
   if (cart.length === 0) {
-    if (emptyCart) emptyCart.style.display = 'block';
-  } else {
-    if (emptyCart) emptyCart.style.display = 'none';
+    if (emptyCart) emptyCart.style.display = "block";
+    cartTotalElement.textContent = "0.00";
+    return;
   }
 
-  const groupedCart = {};
+  if (emptyCart) emptyCart.style.display = "none";
 
-  cart.forEach(item => {
-    const key = `${item.name}-${item.price}`;
-    if (!groupedCart[key]) {
-      groupedCart[key] = { ...item, quantity: 1 };
-    } else {
-      groupedCart[key].quantity++;
-    }
-  });
+  let total = 0;
 
-  Object.values(groupedCart).forEach(item => {
-    total += item.price * item.quantity;
+  cart.forEach((item) => {
+    const quantity = item.quantity || 1;
+    const subtotal = Number(item.price) * quantity;
+    total += subtotal;
 
-    const div = document.createElement('div');
-    div.classList.add('cart-item');
+    const div = document.createElement("div");
+    div.classList.add("cart-item");
 
     div.innerHTML = `
       <div>
         <p>${item.name}</p>
-        <small>RM ${item.price}</small>
+        <small>RM ${formatPrice(item.price)} each</small>
       </div>
 
       <div style="display:flex; align-items:center; gap:10px;">
-        <button class="btn btn-outline" onclick="decreaseItem('${item.name}', ${item.price})">-</button>
-        <span>${item.quantity}</span>
-        <button class="btn btn-outline" onclick="increaseItem('${item.name}', ${item.price})">+</button>
+        <button class="btn btn-outline cart-minus" type="button">-</button>
+        <span>${quantity}</span>
+        <button class="btn btn-outline cart-plus" type="button">+</button>
       </div>
 
       <div>
-        <strong>RM ${(item.price * item.quantity).toFixed(2)}</strong>
+        <strong>RM ${formatPrice(subtotal)}</strong>
       </div>
 
-      <button class="btn btn-outline" onclick="removeAllItem('${item.name}', ${item.price})">
+      <button class="btn btn-outline cart-remove" type="button">
         Remove
       </button>
     `;
 
+    const minusBtn = div.querySelector(".cart-minus");
+    const plusBtn = div.querySelector(".cart-plus");
+    const removeBtn = div.querySelector(".cart-remove");
+
+    plusBtn.addEventListener("click", () => increaseItem(item.name, item.price));
+    minusBtn.addEventListener("click", () => decreaseItem(item.name, item.price));
+    removeBtn.addEventListener("click", () => removeAllItem(item.name, item.price));
+
     cartItemsContainer.appendChild(div);
   });
 
-  cartTotalElement.textContent = total.toFixed(2);
+  cartTotalElement.textContent = formatPrice(total);
 }
 
-/* ================= CART ACTIONS ================= */
-window.increaseItem = function (name, price) {
-  cart.push({ name, price });
-  saveCart();
-  location.reload();
-};
+function findItemIndex(name, price) {
+  cart = getCart();
+  return cart.findIndex(
+    (item) => item.name === name && Number(item.price) === Number(price)
+  );
+}
 
-window.decreaseItem = function (name, price) {
-  const index = cart.findIndex(item => item.name === name && item.price === price);
+function increaseItem(name, price) {
+  const index = findItemIndex(name, price);
+  if (index === -1) return;
 
-  if (index !== -1) {
+  cart[index].quantity = (cart[index].quantity || 1) + 1;
+  saveCart(cart);
+  updateCartCount();
+  renderCartPage();
+}
+
+function decreaseItem(name, price) {
+  const index = findItemIndex(name, price);
+  if (index === -1) return;
+
+  cart[index].quantity = (cart[index].quantity || 1) - 1;
+
+  if (cart[index].quantity <= 0) {
     cart.splice(index, 1);
-    saveCart();
-    location.reload();
   }
-};
 
-window.removeAllItem = function (name, price) {
-  cart = cart.filter(item => !(item.name === name && item.price === price));
-  saveCart();
-  location.reload();
-};
+  saveCart(cart);
+  updateCartCount();
+  renderCartPage();
+}
+
+function removeAllItem(name, price) {
+  cart = getCart().filter(
+    (item) => !(item.name === name && Number(item.price) === Number(price))
+  );
+
+  saveCart(cart);
+  updateCartCount();
+  renderCartPage();
+}
+
+renderCartPage();
 
 /* ================= AUTO-FILL CUSTOMER NAME ================= */
-const currentUserData = JSON.parse(sessionStorage.getItem('user'));
+function autofillCustomerDetails() {
+  const currentUserData = getUser();
 
-if (currentUserData) {
-  const nameInput = document.getElementById('customerName');
-  if (nameInput) {
-    nameInput.value = currentUserData.name || '';
+  if (!currentUserData) return;
+
+  const nameInput = document.getElementById("customerName");
+  if (nameInput && !nameInput.value.trim()) {
+    nameInput.value = currentUserData.name || "";
   }
 }
+
+autofillCustomerDetails();
 
 /* ================= WHATSAPP CHECKOUT ================= */
 window.checkoutWhatsApp = async function () {
-  const user = JSON.parse(sessionStorage.getItem('user'));
+  const user = getUser();
+  cart = getCart();
 
   if (!user) {
-    alert('Please login before placing an order.');
-    window.location.href = 'login.html';
+    alert("Please login before placing an order.");
+    window.location.href = "login.html";
     return;
   }
 
   if (cart.length === 0) {
-    alert('Your cart is empty.');
+    alert("Your cart is empty.");
     return;
   }
 
-  const customerName = document.getElementById('customerName')?.value.trim();
-  const customerPhone = document.getElementById('customerPhone')?.value.trim();
-  const customerAddress = document.getElementById('customerAddress')?.value.trim();
+  const customerName = document.getElementById("customerName")?.value.trim();
+  const customerPhone = document.getElementById("customerPhone")?.value.trim();
+  const customerAddress = document.getElementById("customerAddress")?.value.trim();
 
   if (!customerName || !customerPhone || !customerAddress) {
-    alert('Please fill in your name, phone number, and address first.');
+    alert("Please fill in your name, phone number, and address first.");
     return;
   }
 
-  const whatsappNumber = '601110659774';
+  const whatsappNumber = "601110659774";
 
-  const groupedCart = {};
   let total = 0;
-
-  cart.forEach(item => {
-    const key = `${item.name}-${item.price}`;
-    if (!groupedCart[key]) {
-      groupedCart[key] = { ...item, quantity: 1 };
-    } else {
-      groupedCart[key].quantity += 1;
-    }
-  });
-
-  const orderItems = Object.values(groupedCart).map(item => {
-    const subtotal = item.price * item.quantity;
+  const orderItems = cart.map((item) => {
+    const quantity = item.quantity || 1;
+    const subtotal = Number(item.price) * quantity;
     total += subtotal;
 
     return {
       name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      subtotal: subtotal
+      price: Number(item.price),
+      quantity,
+      subtotal
     };
   });
 
   const orderData = {
-    userId: user.uid || '',
-    userName: user.name || '',
-    userEmail: user.email || '',
+    userId: user.uid || "",
+    userName: user.name || "",
+    userEmail: user.email || "",
     customerName,
     customerPhone,
     customerAddress,
     items: orderItems,
     total,
-    status: 'pending',
+    status: "pending",
     createdAt: new Date().toISOString()
   };
 
   let orderId = null;
 
-  if (typeof window.saveOrderToFirebase === 'function') {
-    orderId = await window.saveOrderToFirebase(orderData);
+  if (typeof window.saveOrderToFirebase === "function") {
+    try {
+      orderId = await window.saveOrderToFirebase(orderData);
+    } catch (error) {
+      orderId = null;
+    }
   }
 
   if (!orderId) {
-    alert('Failed to save order. Please try again.');
+    alert("Failed to save order. Please try again.");
     return;
   }
 
-  let message = 'Hello, I would like to place an order:%0A%0A';
-  message += `Order ID: ${orderId}%0A`;
-  message += `Name: ${customerName}%0A`;
-  message += `Phone: ${customerPhone}%0A`;
-  message += `Address: ${customerAddress}%0A%0A`;
-  message += 'Order Details:%0A';
+  let message = `Hello, I would like to place an order:\n\n`;
+  message += `Order ID: ${orderId}\n`;
+  message += `Name: ${customerName}\n`;
+  message += `Phone: ${customerPhone}\n`;
+  message += `Address: ${customerAddress}\n\n`;
+  message += `Order Details:\n`;
 
-  orderItems.forEach(item => {
-    message += `• ${item.name} x${item.quantity} = RM ${item.subtotal.toFixed(2)}%0A`;
+  orderItems.forEach((item) => {
+    message += `• ${item.name} x${item.quantity} = RM ${formatPrice(item.subtotal)}\n`;
   });
 
-  message += `%0ATotal: RM ${total.toFixed(2)}%0A%0A`;
-  message += 'Please confirm my order. Thank you.';
+  message += `\nTotal: RM ${formatPrice(total)}\n\n`;
+  message += `Please confirm my order. Thank you.`;
 
-  const whatsappURL = `https://wa.me/${whatsappNumber}?text=${message}`;
-  window.open(whatsappURL, '_blank');
+  const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, "_blank");
 
+  localStorage.removeItem(CART_KEY);
   cart = [];
-  sessionStorage.removeItem('cart');
   updateCartCount();
-
-  if (cartItemsContainer) cartItemsContainer.innerHTML = '';
-  if (cartTotalElement) cartTotalElement.textContent = '0';
-  if (emptyCart) emptyCart.style.display = 'block';
+  renderCartPage();
 };
 
 /* ================= USER DISPLAY ================= */
-const user = JSON.parse(sessionStorage.getItem('user'));
-const userNameEl = document.getElementById('userName');
-const guestSection = document.getElementById('guestSection');
-const userSection = document.getElementById('userSection');
+function updateUserDisplay() {
+  const user = getUser();
+  const userNameEl = document.getElementById("userName");
+  const guestSection = document.getElementById("guestSection");
+  const userSection = document.getElementById("userSection");
 
-if (user) {
-  if (userNameEl) {
-    userNameEl.textContent = `Hi, ${user.name}`;
-  }
-  if (guestSection) {
-    guestSection.style.display = 'none';
-  }
-  if (userSection) {
-    userSection.style.display = 'flex';
-  }
-} else {
-  if (guestSection) {
-    guestSection.style.display = 'block';
-  }
-  if (userSection) {
-    userSection.style.display = 'none';
+  if (user) {
+    if (userNameEl) {
+      userNameEl.textContent = `Hi, ${user.name || "User"}`;
+    }
+
+    if (guestSection) {
+      guestSection.style.display = "none";
+    }
+
+    if (userSection) {
+      userSection.style.display = "flex";
+    }
+  } else {
+    if (guestSection) {
+      guestSection.style.display = "block";
+    }
+
+    if (userSection) {
+      userSection.style.display = "none";
+    }
   }
 }
+
+updateUserDisplay();
