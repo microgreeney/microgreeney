@@ -24,7 +24,7 @@ function getUser() {
 }
 
 function formatPrice(value) {
-  return Number(value).toFixed(2);
+  return Number(value || 0).toFixed(2);
 }
 
 let cart = getCart();
@@ -50,6 +50,33 @@ if (menuToggle && navMenu) {
   navMenu.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
       navMenu.classList.remove("show");
+    });
+  });
+}
+
+/* ================= ACCOUNT DROPDOWN ================= */
+const accountBtn = document.getElementById("accountBtn");
+const accountDropdown = document.getElementById("accountDropdown");
+const userSection = document.getElementById("userSection");
+
+if (accountBtn && accountDropdown) {
+  accountBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    accountDropdown.classList.toggle("show");
+  });
+
+  document.addEventListener("click", (e) => {
+    const clickedInsideDropdown =
+      userSection && userSection.contains(e.target);
+
+    if (!clickedInsideDropdown) {
+      accountDropdown.classList.remove("show");
+    }
+  });
+
+  accountDropdown.querySelectorAll("a, button").forEach((item) => {
+    item.addEventListener("click", () => {
+      accountDropdown.classList.remove("show");
     });
   });
 }
@@ -262,7 +289,7 @@ function autofillCustomerDetails() {
 
 autofillCustomerDetails();
 
-/* ================= WHATSAPP CHECKOUT + TRACKING READY ================= */
+/* ================= WHATSAPP CHECKOUT ================= */
 window.checkoutWhatsApp = async function () {
   const user = getUser();
   cart = getCart();
@@ -362,15 +389,15 @@ function updateUserDisplay() {
   const user = getUser();
   const userNameEl = document.getElementById("userName");
   const guestSection = document.getElementById("guestSection");
-  const userSection = document.getElementById("userSection");
+  const userSectionEl = document.getElementById("userSection");
 
   if (user) {
     if (userNameEl) userNameEl.textContent = user.name || "User";
     if (guestSection) guestSection.style.display = "none";
-    if (userSection) userSection.style.display = "flex";
+    if (userSectionEl) userSectionEl.style.display = "inline-flex";
   } else {
     if (guestSection) guestSection.style.display = "block";
-    if (userSection) userSection.style.display = "none";
+    if (userSectionEl) userSectionEl.style.display = "none";
   }
 }
 
