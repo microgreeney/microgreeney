@@ -28,64 +28,103 @@
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
+          <a href="login.html" class="btn btn-outline small-btn">
             Login / Signup
           </a>
         </div>
 
-        <div id="userSection" style="display: none; align-items: center; gap: 12px;">
+        <div id="userSection" style="display:none; align-items:center; gap:12px;">
           <span id="userName"></span>
-          <button onclick="logoutUser()" class="btn btn-outline small-btn" type="button">
-            Logout
-          </button>
+          <button onclick="logoutUser()" class="btn btn-outline small-btn">Logout</button>
         </div>
       </nav>
 
       <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+        <a href="cart.html" class="cart-icon-mobile">
           🛒 <span id="cart-count-mobile">0</span>
         </a>
-        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
+        <button class="menu-toggle" id="menuToggle">☰</button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="section">
+    <section class="section cart-section">
       <div class="container">
-        <div class="section-title">
-          <h1>Your Cart</h1>
-          <p>Review your selected microgreens before checkout.</p>
+
+        <div class="cart-page-header reveal">
+          <div>
+            <span class="eyebrow">Your Cart</span>
+            <h1>Review your order</h1>
+            <p>Check your items and proceed to checkout via WhatsApp.</p>
+          </div>
+
+          <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
         </div>
 
-        <div id="cart-items"></div>
+        <div class="cart-layout">
 
-        <p id="empty-cart" style="display:none; text-align:center; margin-top:20px;">
-          Your cart is empty 🌱
-        </p>
+          <!-- LEFT -->
+          <div class="cart-main reveal">
+            <div class="cart-list-card">
+              <div class="cart-card-header">
+                <h2>Items</h2>
+                <p>Your selected products</p>
+              </div>
 
-        <div class="contact-form cart-customer-form">
-          <h2>Customer Details</h2>
+              <div id="cart-items"></div>
 
-          <div class="form-group">
-            <label for="customerName">Full Name</label>
-            <input type="text" id="customerName" placeholder="Enter your full name" required>
+              <p id="empty-cart" class="empty-cart-message" style="display:none;">
+                Your cart is empty 🌱
+              </p>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="customerPhone">Phone Number</label>
-            <input type="text" id="customerPhone" placeholder="Enter your phone number" required>
-          </div>
+          <!-- RIGHT -->
+          <aside class="cart-sidebar reveal">
+            <div class="cart-summary-card">
 
-          <div class="form-group">
-            <label for="customerAddress">Delivery Address</label>
-            <textarea id="customerAddress" rows="4" placeholder="Enter your address" required></textarea>
-          </div>
-        </div>
+              <h2>Order Summary</h2>
 
-        <div class="cart-total">
-          <h2>Total: RM <span id="cart-total">0</span></h2>
-          <button class="btn btn-primary" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+              <div class="summary-row">
+                <span>Total</span>
+                <strong>RM <span id="cart-total">0.00</span></strong>
+              </div>
+
+              <div class="summary-note">
+                Fresh indoor-grown microgreens prepared with care.
+              </div>
+
+              <div class="contact-form cart-customer-form">
+                <h3>Customer Details</h3>
+
+                <div class="form-group">
+                  <label>Name</label>
+                  <input type="text" id="customerName" required>
+                </div>
+
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="text" id="customerPhone" required>
+                </div>
+
+                <div class="form-group">
+                  <label>Address</label>
+                  <textarea id="customerAddress" rows="4" required></textarea>
+                </div>
+              </div>
+
+              <button class="btn btn-primary cart-checkout-btn" onclick="checkoutWhatsApp()">
+                Checkout via WhatsApp
+              </button>
+
+              <p class="checkout-help-text">
+                You will be redirected to WhatsApp to confirm your order.
+              </p>
+
+            </div>
+          </aside>
+
         </div>
       </div>
     </section>
@@ -95,7 +134,7 @@
     <div class="container footer-grid">
       <div>
         <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+        <p>Fresh indoor-grown microgreens for healthier meals.</p>
       </div>
 
       <div>
