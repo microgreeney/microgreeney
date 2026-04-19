@@ -8,9 +8,14 @@ import {
   collection,
   getDocs,
   query,
-  orderBy
+  orderBy,
+  doc,
+  updateDoc,
+  getDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
+/* ================= FIREBASE ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBy-UbY1KzYCs1bTuMOF1JZoktRjT47MGk",
   authDomain: "microgreeney-aab7b.firebaseapp.com",
@@ -24,12 +29,25 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const adminOrders = document.getElementById("adminOrders");
-
 /* ================= ADMIN EMAIL ================= */
-/* CHANGE THIS TO YOUR EMAIL */
 const ADMIN_EMAIL = "microgreeney@gmail.com";
 
+const adminOrders = document.getElementById("adminOrders");
+
+/* ================= TIME FORMAT ================= */
+function getMalaysiaTimeString() {
+  const now = new Date();
+  return now.toLocaleString("en-MY", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+}
+
+/* ================= FORMAT DATE ================= */
 function formatDate(value) {
   if (!value) return "N/A";
 
@@ -43,35 +61,21 @@ function formatDate(value) {
     }
 
     return "N/A";
-  } catch (error) {
+  } catch {
     return "N/A";
   }
 }
 
+/* ================= FORMAT ITEMS ================= */
 function formatItems(items = []) {
-  if (!Array.isArray(items) || items.length === 0) {
-    return "<li>No items</li>";
-  }
+  if (!items.length) return "<li>No items</li>";
 
-  return items
-    .map((item) => {
-      const qty = item.quantity || 1;
-      const subtotal = Number(item.subtotal || 0).toFixed(2);
-      return `<li>${item.name} × ${qty} — RM ${subtotal}</li>`;
-    })
-    .join("");
+  return items.map(item => {
+    return `<li>${item.name} × ${item.quantity} — RM ${Number(item.subtotal).toFixed(2)}</li>`;
+  }).join("");
 }
 
-function showAccessDenied(message) {
-  if (!adminOrders) return;
-
-  adminOrders.innerHTML = `
-    <div class="admin-empty">
-      <p>${message}</p>
-    </div>
-  `;
-}
-
+/* ================= LOAD ORDERS ================= */
 window.loadOrders = async function () {
   if (!adminOrders) return;
 
@@ -79,14 +83,8 @@ window.loadOrders = async function () {
 
   try {
     const ordersRef = collection(db, "orders");
-    let snapshot;
-
-    try {
-      const q = query(ordersRef, orderBy("firebaseCreatedAt", "desc"));
-      snapshot = await getDocs(q);
-    } catch (error) {
-      snapshot = await getDocs(ordersRef);
-    }
+    const q = query(ordersRef, orderBy("firebaseCreatedAt", "desc"));
+    const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
       adminOrders.innerHTML = `<p class="admin-empty">No orders found yet.</p>`;
@@ -97,15 +95,16 @@ window.loadOrders = async function () {
 
     snapshot.forEach((docSnap) => {
       const order = docSnap.data();
+      const id = docSnap.id;
 
       html += `
         <article class="admin-order-card">
           <div class="admin-order-top">
             <div>
-              <h3>Order ID: ${docSnap.id}</h3>
-              <p><strong>Status:</strong> ${order.status || "pending"}</p>
+              <h3>Order ID: ${id}</h3>
+              <p><strong>Status:</strong> ${order.status || "Pending"}</p>
             </div>
-            <span class="admin-order-date">${formatDate(order.createdAt || order.firebaseCreatedAt)}</span>
+            <span class="admin-order-date">${formatDate(order.firebaseCreatedAt)}</span>
           </div>
 
           <div class="admin-order-body">
@@ -127,33 +126,86 @@ window.loadOrders = async function () {
 
           <div class="admin-order-footer">
             <strong>Total: RM ${Number(order.total || 0).toFixed(2)}</strong>
+
+            <div style="margin-top:10px;">
+              <select id="status-${id}">
+                <option>Pending</option>
+                <option>Confirmed</option>
+                <option>Packed</option>
+                <option>Out for Delivery</option>
+                <option>Delivered</option>
+                <option>Cancelled</option>
+              </select>
+
+              <button onclick="updateOrderStatus('${id}')" class="btn btn-primary small-btn">
+                Update
+              </button>
+            </div>
           </div>
         </article>
       `;
     });
 
     adminOrders.innerHTML = html;
+
   } catch (error) {
-    console.error("Error loading orders:", error);
+    console.error(error);
     adminOrders.innerHTML = `<p class="admin-empty">Failed to load orders.</p>`;
   }
 };
 
-/* ================= PROTECT ADMIN PAGE ================= */
-onAuthStateChanged(auth, async (user) => {
+/* ================= UPDATE STATUS ================= */
+window.updateOrderStatus = async function (orderId) {
+  try {
+    const select = document.getElementById(`status-${orderId}`);
+    const newStatus = select.value;
+
+    const ref = doc(db, "orders", orderId);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      alert("Order not found.");
+      return;
+    }
+
+    const data = snap.data();
+    const timeline = data.timeline || [];
+
+    timeline.push({
+      status: newStatus,
+      time: getMalaysiaTimeString()
+    });
+
+    await updateDoc(ref, {
+      status: newStatus,
+      timeline: timeline,
+      updatedAt: serverTimestamp()
+    });
+
+    alert("Status updated!");
+    loadOrders();
+
+  } catch (error) {
+    console.error(error);
+    alert("Failed to update status.");
+  }
+};
+
+/* ================= PROTECT ADMIN ================= */
+function showAccessDenied(message) {
+  adminOrders.innerHTML = `<p class="admin-empty">${message}</p>`;
+}
+
+onAuthStateChanged(auth, (user) => {
   if (!user) {
-    showAccessDenied("Access denied. Please login with the admin account.");
-    setTimeout(() => {
-      window.location.href = "login.html";
-    }, 1500);
+    showAccessDenied("Login required.");
+    setTimeout(() => window.location.href = "login.html", 1500);
     return;
   }
 
   if ((user.email || "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-    showAccessDenied("Access denied. This page is only for the admin.");
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1500);
+    showAccessDenied("Access denied.");
+    setTimeout(() => window.location.href = "index.html", 1500);
     return;
   }
 
