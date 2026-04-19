@@ -59,17 +59,14 @@ const accountBtn = document.getElementById("accountBtn");
 const accountDropdown = document.getElementById("accountDropdown");
 const userSection = document.getElementById("userSection");
 
-if (accountBtn && accountDropdown) {
+if (accountBtn && accountDropdown && userSection) {
   accountBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     accountDropdown.classList.toggle("show");
   });
 
   document.addEventListener("click", (e) => {
-    const clickedInsideDropdown =
-      userSection && userSection.contains(e.target);
-
-    if (!clickedInsideDropdown) {
+    if (!userSection.contains(e.target)) {
       accountDropdown.classList.remove("show");
     }
   });
@@ -275,15 +272,25 @@ function removeAllItem(name, price) {
 
 renderCartPage();
 
-/* ================= AUTO-FILL CUSTOMER NAME ================= */
+/* ================= AUTO-FILL CUSTOMER DETAILS ================= */
 function autofillCustomerDetails() {
   const currentUserData = getUser();
-
   if (!currentUserData) return;
 
   const nameInput = document.getElementById("customerName");
+  const phoneInput = document.getElementById("customerPhone");
+  const addressInput = document.getElementById("customerAddress");
+
   if (nameInput && !nameInput.value.trim()) {
     nameInput.value = currentUserData.name || "";
+  }
+
+  if (phoneInput && !phoneInput.value.trim()) {
+    phoneInput.value = currentUserData.phone || "";
+  }
+
+  if (addressInput && !addressInput.value.trim()) {
+    addressInput.value = currentUserData.address || "";
   }
 }
 
@@ -382,6 +389,7 @@ window.checkoutWhatsApp = async function () {
   renderCartPage();
 
   alert(`Order placed successfully! Your Order ID is ${orderId}`);
+  window.location.href = `my-orders.html`;
 };
 
 /* ================= USER DISPLAY ================= */
