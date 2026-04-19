@@ -6,7 +6,9 @@ import {
   onAuthStateChanged,
   signOut,
   setPersistence,
-  browserSessionPersistence
+  browserSessionPersistence,
+  GoogleAuthProvider,
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 import {
   getFirestore,
@@ -32,6 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
 /* ================= STORAGE KEY ================= */
 const USER_KEY = "microgreeney_user";
@@ -185,6 +188,62 @@ function setupLogin() {
   });
 }
 
+/* ================= GOOGLE LOGIN ================= */
+window.loginWithGoogle = async function () {
+  const loginMessage = document.getElementById("loginMessage");
+  const signupMessage = document.getElementById("signupMessage");
+
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        name: user.displayName || "User",
+        email: user.email || "",
+        createdAt: serverTimestamp()
+      });
+    }
+
+    sessionStorage.setItem(USER_KEY, JSON.stringify({
+      uid: user.uid,
+      name: user.displayName || "User",
+      email: user.email || ""
+    }));
+
+    if (loginMessage) {
+      loginMessage.textContent = "Google login successful!";
+      loginMessage.style.color = "green";
+    }
+
+    if (signupMessage) {
+      signupMessage.textContent = "";
+    }
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 500);
+  } catch (err) {
+    console.error("Google login error:", err);
+
+    const message = getFriendlyGoogleMessage(err);
+
+    if (loginMessage) {
+      loginMessage.textContent = message;
+      loginMessage.style.color = "red";
+    }
+
+    if (signupMessage) {
+      signupMessage.textContent = message;
+      signupMessage.style.color = "red";
+    }
+  }
+};
+
 /* ================= USER SESSION ================= */
 function setupAuthState() {
   onAuthStateChanged(auth, async (user) => {
@@ -208,8 +267,6 @@ function setupAuthState() {
 
         sessionStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
       }
-
-      window.dispatchEvent(new Event("authStateUpdated"));
     } catch (err) {
       console.error("User session error:", err);
     }
@@ -263,5 +320,20 @@ function getFriendlyAuthMessage(error) {
       return "Too many attempts. Please try again later.";
     default:
       return error?.message || "Something went wrong. Please try again.";
+  }
+}
+
+function getFriendlyGoogleMessage(error) {
+  const code = error?.code || "";
+
+  switch (code) {
+    case "auth/popup-closed-by-user":
+      return "Google sign-in popup was closed.";
+    case "auth/popup-blocked":
+      return "Popup was blocked by the browser. Please allow popups.";
+    case "auth/cancelled-popup-request":
+      return "Google sign-in was cancelled.";
+    default:
+      return "Google login failed. Please try again.";
   }
 }
