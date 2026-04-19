@@ -31,6 +31,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+/* ================= STORAGE KEY ================= */
+const USER_KEY = "microgreeney_user";
+
 /* ================= ELEMENTS ================= */
 const signupForm = document.getElementById("signupForm");
 const loginForm = document.getElementById("loginForm");
@@ -38,9 +41,9 @@ const tabButtons = document.querySelectorAll(".tab-btn");
 
 /* ================= LOGIN / SIGNUP TABS ================= */
 if (tabButtons.length && loginForm && signupForm) {
-  tabButtons.forEach(button => {
+  tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      tabButtons.forEach(btn => btn.classList.remove("active"));
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
       button.classList.add("active");
 
       const target = button.dataset.tab;
@@ -93,7 +96,7 @@ if (signupForm) {
       });
 
       if (msg) {
-        msg.textContent = "Account created successfully!";
+        msg.textContent = "Account created successfully! Please login.";
         msg.style.color = "green";
       }
 
@@ -105,8 +108,9 @@ if (signupForm) {
       }
     } catch (err) {
       console.error("Firebase signup error:", err);
+
       if (msg) {
-        msg.textContent = `Firebase: ${err.message}`;
+        msg.textContent = getFriendlyAuthMessage(err);
         msg.style.color = "red";
       }
     }
@@ -143,29 +147,39 @@ if (loginForm) {
 
       setTimeout(() => {
         window.location.href = "index.html";
-      }, 1000);
+      }, 800);
     } catch (err) {
       console.error("Firebase login error:", err);
+
       if (msg) {
-        msg.textContent = `Firebase: ${err.message}`;
+        msg.textContent = getFriendlyAuthMessage(err);
         msg.style.color = "red";
       }
     }
   });
 }
 
-/* ================= SAVE USER SESSION ================= */
+/* ================= USER SESSION ================= */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    sessionStorage.removeItem("user");
+    localStorage.removeItem(USER_KEY);
     return;
   }
 
   try {
-    const docSnap = await getDoc(doc(db, "users", user.uid));
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      sessionStorage.setItem("user", JSON.stringify(docSnap.data()));
+      localStorage.setItem(USER_KEY, JSON.stringify(docSnap.data()));
+    } else {
+      const fallbackUser = {
+        uid: user.uid,
+        name: user.displayName || "User",
+        email: user.email || ""
+      };
+
+      localStorage.setItem(USER_KEY, JSON.stringify(fallbackUser));
     }
   } catch (err) {
     console.error("User session error:", err);
@@ -180,18 +194,43 @@ window.logoutUser = async function () {
     console.error("Logout error:", err);
   }
 
-  sessionStorage.removeItem("user");
-  sessionStorage.removeItem("cart");
+  localStorage.removeItem(USER_KEY);
   window.location.href = "login.html";
 };
 
 /* ================= SAVE ORDER ================= */
 window.saveOrderToFirebase = async function (orderData) {
   try {
-    const docRef = await addDoc(collection(db, "orders"), orderData);
+    const docRef = await addDoc(collection(db, "orders"), {
+      ...orderData,
+      firebaseCreatedAt: serverTimestamp()
+    });
+
     return docRef.id;
   } catch (err) {
     console.error("Error saving order:", err);
     return null;
   }
 };
+
+/* ================= FRIENDLY AUTH MESSAGES ================= */
+function getFriendlyAuthMessage(error) {
+  const code = error?.code || "";
+
+  switch (code) {
+    case "auth/email-already-in-use":
+      return "This email is already registered.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/weak-password":
+      return "Password should be at least 6 characters.";
+    case "auth/invalid-credential":
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+      return "Incorrect email or password.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
+    default:
+      return error?.message || "Something went wrong. Please try again.";
+  }
+}
