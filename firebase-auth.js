@@ -142,6 +142,7 @@ if (signupForm) {
 
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
       const user = result.user;
 
       await setDoc(doc(db, "users", user.uid), {
