@@ -458,32 +458,38 @@ select {
 
 .hero-image-card {
   position: relative;
-  padding: 0.6rem;
-  border-radius: 24px;
+  padding: 0.9rem;
+  border-radius: 28px;
   min-height: auto;
   background: linear-gradient(180deg, rgba(222,244,231,0.9), rgba(255,255,255,0.95));
   overflow: hidden;
+  box-shadow: 0 24px 60px rgba(13, 39, 29, 0.14);
 }
 
 .hero-image-placeholder {
   position: relative;
   width: 100%;
-  border-radius: 16px;
-  padding: 4px;
+  border-radius: 24px;
+  padding: 10px;
   overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 20px 50px rgba(13, 39, 29, 0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .hero-image-placeholder img {
-  width: 50%;
-  height: auto;
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
   display: block;
   margin: 0 auto;
-  border-radius: 24px;
+  border-radius: 20px;
   transition: transform 0.35s ease;
 }
 
 .hero-image-placeholder:hover img {
-  transform: scale(1.1);
+  transform: scale(1.04);
 }
 
 .mini-panel {
@@ -1371,6 +1377,10 @@ select:focus {
   .admin-order-card {
     padding: 1.1rem;
   }
+
+  .hero-image-placeholder img {
+    height: 360px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -1418,5 +1428,20 @@ select:focus {
 
   .hero-actions {
     flex-direction: column;
+  }
+
+  .hero-image-card {
+    padding: 0.7rem;
+    border-radius: 24px;
+  }
+
+  .hero-image-placeholder {
+    padding: 8px;
+    border-radius: 20px;
+  }
+
+  .hero-image-placeholder img {
+    height: 300px;
+    border-radius: 16px;
   }
 }
