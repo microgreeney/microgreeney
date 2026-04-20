@@ -240,7 +240,8 @@ if (resendVerificationBtn) {
 
       if (user.emailVerified) {
         if (message) message.textContent = "Your email is already verified. Please log in.";
-        resendVerificationBtn.style.display = "none";
+        if (resendVerificationBtn) resendVerificationBtn.style.display = "none";
+        await signOut(auth);
         return;
       }
 
