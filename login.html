@@ -2,15 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Microgreeney</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
+  <!-- HEADER -->
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -18,148 +22,158 @@
         <span>Microgreeney</span>
       </a>
 
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+
       <nav class="nav-menu" id="navMenu">
         <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
+        <a href="about.html">About</a>
         <a href="shop.html">Shop</a>
-        <a href="contact.html">Contact</a>
         <a href="track.html">Track Order</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+        <a href="contact.html">Contact</a>
 
         <a href="cart.html" class="cart-btn">
-          🛒 Cart <span id="cart-count">0</span>
+          Cart
+          <span id="cart-count">0</span>
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn active-btn">
-            Login / Signup
-          </a>
+          <a href="login.html" class="btn btn-outline small-btn active-btn">Login / Sign Up</a>
         </div>
 
-        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
-          <button id="accountBtn" class="account-btn" type="button">
-            <span id="userName"></span>
+        <div id="userSection" class="account-dropdown-wrap" style="display: none;">
+          <button class="account-btn" id="accountBtn" type="button">
+            <span id="userName">My Account</span>
             <span class="account-caret">▼</span>
           </button>
 
-          <div id="accountDropdown" class="account-dropdown-menu">
-            <a href="profile.html">👤 Profile</a>
-            <a href="my-orders.html">📦 My Orders</a>
-            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          <div class="account-dropdown-menu" id="accountDropdown">
+            <a href="profile.html">My Profile</a>
+            <a href="my-orders.html">My Orders</a>
+            <a href="track.html">Track Order</a>
+            <a href="admin.html" id="adminLink" style="display: none;">Admin Panel</a>
+            <button type="button" onclick="logoutUser()">Logout</button>
           </div>
         </div>
       </nav>
 
-      <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile">
-          🛒 <span id="cart-count-mobile">0</span>
-        </a>
-        <button class="menu-toggle" id="menuToggle">☰</button>
-      </div>
+      <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+        🛒
+        <span id="cart-count-mobile">0</span>
+      </a>
     </div>
   </header>
 
-  <main>
-    <section class="auth-section">
-      <div class="container auth-wrap">
+  <!-- LOGIN / SIGNUP SECTION -->
+  <section class="auth-section">
+    <div class="container auth-wrap">
+      <div class="auth-intro reveal">
+        <span class="eyebrow">Welcome Back</span>
+        <h1>Login or Create Your Microgreeney Account</h1>
+        <p>
+          Access your profile, manage your orders, track deliveries, and enjoy a smoother shopping experience with Microgreeney.
+        </p>
+      </div>
 
-        <div class="auth-intro reveal">
-          <span class="eyebrow">Customer Account</span>
-          <h1>Access your account</h1>
-          <p>
-            Login or create an account to manage your profile, view your orders,
-            and stay connected with fresh indoor-grown microgreens.
-          </p>
+      <div class="auth-card reveal">
+        <div class="tab-buttons">
+          <button class="tab-btn active" data-tab="loginForm" type="button">Login</button>
+          <button class="tab-btn" data-tab="signupForm" type="button">Signup</button>
         </div>
 
-        <div class="auth-card reveal">
-
-          <div class="tab-buttons">
-            <button type="button" class="tab-btn active" data-tab="loginForm">Login</button>
-            <button type="button" class="tab-btn" data-tab="signupForm">Signup</button>
+        <!-- LOGIN FORM -->
+        <form id="loginForm" class="active-form">
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" required />
           </div>
 
-          <form id="loginForm" class="auth-form active-form">
-            <div class="form-group">
-              <label for="loginEmail">Email</label>
-              <input type="email" id="loginEmail" required />
-            </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required />
+          </div>
 
-            <div class="form-group">
-              <label for="loginPassword">Password</label>
-              <input type="password" id="loginPassword" required />
-            </div>
+          <p style="text-align: right; margin: -4px 0 14px;">
+            <a
+              href="#"
+              id="forgotPasswordLink"
+              style="color: #1f8f56; font-weight: 700; text-decoration: none;"
+            >
+              Forgot Password?
+            </a>
+          </p>
 
-            <p style="text-align: right; margin: -4px 0 14px;">
-              <a href="#" id="forgotPasswordLink" style="color: #1f8f56; font-weight: 600; text-decoration: none;">
-                Forgot Password?
-              </a>
-            </p>
+          <button type="submit" class="btn btn-primary full-btn">Login</button>
 
-            <button type="submit" class="btn btn-primary full-btn">
-              Login
-            </button>
+          <p id="loginMessage" class="form-note"></p>
 
-            <p id="loginMessage" class="form-note"></p>
+          <button
+            id="resendVerificationBtn"
+            type="button"
+            class="btn btn-outline small-btn"
+            style="display: none; margin-top: 10px;"
+          >
+            Resend Verification Email
+          </button>
 
-            <button type="button" class="google-btn" style="margin-top: 12px;" onclick="loginWithGoogle()">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-              Continue with Google
-            </button>
-          </form>
+          <button
+            type="button"
+            class="google-btn"
+            style="margin-top: 14px;"
+            onclick="loginWithGoogle()"
+          >
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+            Continue with Google
+          </button>
+        </form>
 
-          <form id="signupForm" class="auth-form hidden-form">
-            <div class="form-group">
-              <label for="signupName">Name</label>
-              <input type="text" id="signupName" required />
-            </div>
+        <!-- SIGNUP FORM -->
+        <form id="signupForm" class="hidden-form">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" placeholder="Enter your full name" required />
+          </div>
 
-            <div class="form-group">
-              <label for="signupEmail">Email</label>
-              <input type="email" id="signupEmail" required />
-            </div>
+          <div class="form-group">
+            <label for="signupEmail">Email</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email" required />
+          </div>
 
-            <div class="form-group">
-              <label for="signupPassword">Password</label>
-              <input type="password" id="signupPassword" required />
-            </div>
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" placeholder="Create a password" required />
+          </div>
 
-            <button type="submit" class="btn btn-primary full-btn">
-              Signup
-            </button>
+          <button type="submit" class="btn btn-primary full-btn">Create Account</button>
 
-            <p id="signupMessage" class="form-note"></p>
-
-            <button type="button" class="google-btn" style="margin-top: 12px;" onclick="loginWithGoogle()">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-              Continue with Google
-            </button>
-          </form>
-
-        </div>
+          <p id="signupMessage" class="form-note"></p>
+        </form>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
         <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals.</p>
+        <p>
+          Fresh indoor microgreens grown with care for healthier meals, better presentation, and everyday convenience.
+        </p>
       </div>
 
       <div>
         <h4>Quick Links</h4>
         <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
+        <a href="about.html">About</a>
         <a href="shop.html">Shop</a>
         <a href="contact.html">Contact</a>
       </div>
 
       <div>
-        <h4>Account</h4>
-        <a href="login.html">Login</a>
-        <a href="login.html">Signup</a>
+        <h4>Support</h4>
+        <a href="track.html">Track Order</a>
+        <a href="login.html">Login / Sign Up</a>
+        <a href="cart.html">Cart</a>
       </div>
     </div>
 
@@ -168,7 +182,48 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
   <script type="module" src="firebase-auth.js"></script>
+  <script src="script.js"></script>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    const accountBtn = document.getElementById("accountBtn");
+    const accountDropdown = document.getElementById("accountDropdown");
+
+    if (menuToggle && navMenu) {
+      menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("show");
+      });
+    }
+
+    if (accountBtn && accountDropdown) {
+      accountBtn.addEventListener("click", () => {
+        accountDropdown.classList.toggle("show");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+          accountDropdown.classList.remove("show");
+        }
+      });
+    }
+
+    const reveals = document.querySelectorAll(".reveal");
+
+    function revealOnScroll() {
+      const triggerBottom = window.innerHeight * 0.88;
+
+      reveals.forEach((el) => {
+        const boxTop = el.getBoundingClientRect().top;
+        if (boxTop < triggerBottom) {
+          el.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
+  </script>
 </body>
 </html>
