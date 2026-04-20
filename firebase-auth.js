@@ -43,6 +43,7 @@ const googleProvider = new GoogleAuthProvider();
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const tabButtons = document.querySelectorAll(".tab-btn");
+const resendVerificationBtn = document.getElementById("resendVerificationBtn");
 
 /* ================= TAB SWITCH ================= */
 if (tabButtons.length) {
@@ -109,6 +110,9 @@ if (loginForm) {
     const password = document.getElementById("loginPassword")?.value.trim();
     const message = document.getElementById("loginMessage");
 
+    if (message) message.textContent = "";
+    if (resendVerificationBtn) resendVerificationBtn.style.display = "none";
+
     if (!email || !password) {
       if (message) message.textContent = "Please fill in email and password.";
       return;
@@ -118,11 +122,15 @@ if (loginForm) {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const user = result.user;
 
-      if (!user.emailVerified) {
-        await sendEmailVerification(user);
+      await user.reload();
 
+      if (!user.emailVerified) {
         if (message) {
-          message.textContent = "Please verify your email first. A new verification link has been sent.";
+          message.textContent = "Please verify your email before logging in.";
+        }
+
+        if (resendVerificationBtn) {
+          resendVerificationBtn.style.display = "inline-flex";
         }
 
         await signOut(auth);
@@ -133,7 +141,25 @@ if (loginForm) {
       window.location.href = "index.html";
     } catch (error) {
       console.error("Login error:", error);
-      if (message) message.textContent = error.message;
+
+      if (message) {
+        switch (error.code) {
+          case "auth/too-many-requests":
+            message.textContent = "Too many login attempts. Please wait a while and try again.";
+            break;
+          case "auth/invalid-credential":
+            message.textContent = "Invalid email or password.";
+            break;
+          case "auth/user-not-found":
+            message.textContent = "No account found with this email.";
+            break;
+          case "auth/wrong-password":
+            message.textContent = "Incorrect password.";
+            break;
+          default:
+            message.textContent = error.message;
+        }
+      }
     }
   });
 }
@@ -175,7 +201,70 @@ if (signupForm) {
       await signOut(auth);
     } catch (error) {
       console.error("Signup error:", error);
-      if (message) message.textContent = error.message;
+      if (message) {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            message.textContent = "This email is already registered.";
+            break;
+          case "auth/weak-password":
+            message.textContent = "Password should be at least 6 characters.";
+            break;
+          case "auth/too-many-requests":
+            message.textContent = "Too many requests. Please wait a while and try again.";
+            break;
+          default:
+            message.textContent = error.message;
+        }
+      }
+    }
+  });
+}
+
+/* ================= RESEND VERIFICATION ================= */
+if (resendVerificationBtn) {
+  resendVerificationBtn.addEventListener("click", async () => {
+    const email = document.getElementById("loginEmail")?.value.trim();
+    const password = document.getElementById("loginPassword")?.value.trim();
+    const message = document.getElementById("loginMessage");
+
+    if (!email || !password) {
+      if (message) message.textContent = "Enter your email and password first.";
+      return;
+    }
+
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+
+      await user.reload();
+
+      if (user.emailVerified) {
+        if (message) message.textContent = "Your email is already verified. Please log in.";
+        resendVerificationBtn.style.display = "none";
+        return;
+      }
+
+      await sendEmailVerification(user);
+
+      if (message) {
+        message.textContent = "Verification email sent again. Please check your inbox or spam folder.";
+      }
+
+      await signOut(auth);
+    } catch (error) {
+      console.error("Resend verification error:", error);
+      if (message) {
+        switch (error.code) {
+          case "auth/too-many-requests":
+            message.textContent = "Too many requests. Please wait before requesting another verification email.";
+            break;
+          case "auth/invalid-credential":
+            message.textContent = "Invalid email or password.";
+            break;
+          default:
+            message.textContent = error.message;
+        }
+      }
     }
   });
 }
@@ -202,7 +291,15 @@ if (forgotPasswordLink) {
       }
     } catch (error) {
       console.error("Forgot password error:", error);
-      if (message) message.textContent = error.message;
+      if (message) {
+        switch (error.code) {
+          case "auth/too-many-requests":
+            message.textContent = "Too many requests. Please wait a while before trying again.";
+            break;
+          default:
+            message.textContent = error.message;
+        }
+      }
     }
   });
 }
