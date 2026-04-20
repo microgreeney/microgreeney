@@ -325,6 +325,12 @@ onAuthStateChanged(auth, async (user) => {
   const userNameEl = document.getElementById("userName");
   const adminLink = document.getElementById("adminLink");
 
+  // AUTO REDIRECT AFTER EMAIL VERIFICATION
+  if (user && user.emailVerified && window.location.pathname.includes("login.html")) {
+  window.location.href = "index.html";
+  return;
+  }
+
   if (user) {
     try {
       const userRef = doc(db, "users", user.uid);
