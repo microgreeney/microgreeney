@@ -3,13 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Microgreeney</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Microgreeney | Fresh Microgreens for Everyday Living</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <!-- HEADER -->
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="index.html" class="logo">
@@ -17,202 +22,232 @@
         <span>Microgreeney</span>
       </a>
 
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+
       <nav class="nav-menu" id="navMenu">
         <a href="index.html" class="active">Home</a>
-        <a href="about.html">About Us</a>
+        <a href="about.html">About</a>
         <a href="shop.html">Shop</a>
-        <a href="contact.html">Contact</a>
         <a href="track.html">Track Order</a>
-        <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+        <a href="contact.html">Contact</a>
 
         <a href="cart.html" class="cart-btn">
-          🛒 Cart <span id="cart-count">0</span>
+          Cart
+          <span id="cart-count">0</span>
         </a>
 
         <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn" id="loginBtn">
-            Login / Signup
-          </a>
+          <a href="login.html" class="btn btn-outline small-btn">Login / Sign Up</a>
         </div>
 
-        <div id="userSection" class="account-dropdown-wrap" style="display:none;">
-          <button id="accountBtn" class="account-btn" type="button">
-            <span id="userName"></span>
+        <div id="userSection" class="account-dropdown-wrap" style="display: none;">
+          <button class="account-btn" id="accountBtn" type="button">
+            <span id="userName">My Account</span>
             <span class="account-caret">▼</span>
           </button>
 
-          <div id="accountDropdown" class="account-dropdown-menu">
-            <a href="profile.html">👤 Profile</a>
-            <a href="my-orders.html">📦 My Orders</a>
-            <button onclick="logoutUser()" type="button">🚪 Logout</button>
+          <div class="account-dropdown-menu" id="accountDropdown">
+            <a href="profile.html">My Profile</a>
+            <a href="my-orders.html">My Orders</a>
+            <a href="track.html">Track Order</a>
+            <a href="admin.html" id="adminLink" style="display: none;">Admin Panel</a>
+            <button type="button" onclick="logoutUser()">Logout</button>
           </div>
         </div>
       </nav>
 
-      <div class="nav-right">
-        <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
-          🛒 <span id="cart-count-mobile">0</span>
-        </a>
-        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu">☰</button>
-      </div>
+      <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
+        🛒
+        <span id="cart-count-mobile">0</span>
+      </a>
     </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-content reveal">
-          <span class="eyebrow">Premium Indoor Microgreens</span>
-          <h1>Freshly grown microgreens for healthier meals and better living.</h1>
-          <p class="hero-text">
-            We grow clean, vibrant, nutrient-rich microgreens indoors with care, consistency, and quality.
-            Perfect for homes, restaurants, cafes, and health-conscious customers.
-          </p>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text reveal">
+        <span class="eyebrow">Fresh • Local • Premium</span>
+        <h1>Fresh Microgreens Grown with Care for a Healthier Everyday Life</h1>
+        <p>
+          At Microgreeney, we grow vibrant and nutrient-rich microgreens in a clean indoor environment.
+          Enjoy fresh harvests that are perfect for salads, sandwiches, smoothies, and healthy meals at home.
+        </p>
 
-          <div class="hero-actions">
-            <a href="shop.html" class="btn btn-primary">Shop Now</a>
-            <a href="about.html" class="btn btn-outline">Learn More</a>
-          </div>
-
-          <div class="hero-stats">
-            <div>
-              <strong>100% Indoor</strong>
-              <span>Clean growing environment</span>
-            </div>
-            <div>
-              <strong>Fresh Harvest</strong>
-              <span>Packed with natural goodness</span>
-            </div>
-            <div>
-              <strong>Local Supply</strong>
-              <span>Reliable service and delivery</span>
-            </div>
-          </div>
+        <div class="hero-actions">
+          <a href="shop.html" class="btn btn-primary">Shop Now</a>
+          <a href="about.html" class="btn btn-outline">Learn More</a>
         </div>
 
-        <div class="hero-card hero-image-card reveal">
-          <div class="hero-image">
-            <div class="hero-image-card">
-              <img src="images/farm2.webp" alt="Microgreen Farm" />
-            </div>
+        <div class="hero-stats">
+          <div>
+            <strong>Fresh Harvest</strong>
+            <span>Grown carefully in a controlled indoor setup</span>
+          </div>
+          <div>
+            <strong>Nutrient Rich</strong>
+            <span>Packed with natural flavor, color, and goodness</span>
+          </div>
+          <div>
+            <strong>Local Delivery</strong>
+            <span>Convenient ordering for your home and family</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card reveal">
+        <div class="hero-image-card">
+          <div class="hero-image-placeholder">
+            <img src="images/farm2.webp" alt="Microgreeney indoor microgreen farm" />
           </div>
 
           <div class="mini-panel">
-            <h3>Why choose us?</h3>
-            <p>Consistent quality, hygienic indoor farming, and vibrant greens grown for freshness and taste.</p>
+            <strong>Why choose Microgreeney?</strong>
+            <p>
+              We focus on freshness, clean growing practices, and a premium customer experience from browsing to delivery.
+            </p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section soft-bg reveal">
-      <div class="container">
-        <div class="section-title center">
-          <span class="eyebrow">Why Microgreeney</span>
-          <h2>Fresh greens with premium care.</h2>
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title center reveal">
+        <span class="eyebrow">What makes us special</span>
+        <h2>Simple, fresh, and made for modern healthy living</h2>
+      </div>
+
+      <div class="card-grid three">
+        <div class="feature-card reveal">
+          <div class="icon-circle">🌿</div>
+          <h3>Freshly Grown</h3>
+          <p>
+            Our microgreens are grown with attention and harvested fresh to preserve quality, taste, and appearance.
+          </p>
         </div>
 
-        <div class="card-grid three">
-          <article class="feature-card reveal">
-            <div class="icon-circle">🌱</div>
-            <h3>Freshly Grown</h3>
-            <p>Our microgreens are cultivated carefully indoors for reliable freshness and vibrant taste.</p>
-          </article>
+        <div class="feature-card reveal">
+          <div class="icon-circle">💚</div>
+          <h3>Healthy Choice</h3>
+          <p>
+            Add color, texture, and nutrition to your meals with greens that fit easily into your daily routine.
+          </p>
+        </div>
 
-          <article class="feature-card reveal">
-            <div class="icon-circle">💧</div>
-            <h3>Clean Growing</h3>
-            <p>We maintain hygienic indoor conditions to deliver cleaner, safer, and more consistent produce.</p>
-          </article>
-
-          <article class="feature-card reveal">
-            <div class="icon-circle">🚚</div>
-            <h3>Ready to Deliver</h3>
-            <p>Perfect for homes, cafes, and restaurants looking for premium local microgreens.</p>
-          </article>
+        <div class="feature-card reveal">
+          <div class="icon-circle">🚚</div>
+          <h3>Easy Ordering</h3>
+          <p>
+            Browse products, place orders, and track them easily through a clean and user-friendly website experience.
+          </p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section reveal">
-      <div class="container">
-        <div class="section-title center">
-          <span class="eyebrow">Popular Picks</span>
-          <h2>Customer favorite microgreens</h2>
-        </div>
-
-        <div class="product-grid">
-          <article class="shop-card">
-            <div class="product-top">🌻</div>
-            <h3>Sunflower Microgreens</h3>
-            <p>Crunchy, mild, and nutty. Great for salads, wraps, and snacking.</p>
-            <div class="price-row">
-              <span>RM12 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Sunflower Microgreens" data-price="12">
-                Add to Cart
-              </button>
-            </div>
-          </article>
-
-          <article class="shop-card">
-            <div class="product-top">🌶️</div>
-            <h3>Radish Microgreens</h3>
-            <p>Peppery and vibrant. Perfect for sandwiches, bowls, and garnishes.</p>
-            <div class="price-row">
-              <span>RM10 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Radish Microgreens" data-price="10">
-                Add to Cart
-              </button>
-            </div>
-          </article>
-
-          <article class="shop-card">
-            <div class="product-top">🌿</div>
-            <h3>Broccoli Microgreens</h3>
-            <p>Mild, fresh, and easy to pair with many healthy meals.</p>
-            <div class="price-row">
-              <span>RM11 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Broccoli Microgreens" data-price="11">
-                Add to Cart
-              </button>
-            </div>
-          </article>
-
-          <article class="shop-card">
-            <div class="product-top">🍃</div>
-            <h3>Pea Shoots Microgreens</h3>
-            <p>Tender, juicy, and slightly sweet. Excellent for salads and stir fry.</p>
-            <div class="price-row">
-              <span>RM13 / pack</span>
-              <button class="btn btn-primary add-to-cart" data-name="Pea Shoots Microgreens" data-price="13">
-                Add to Cart
-              </button>
-            </div>
-          </article>
+  <!-- ABOUT PREVIEW -->
+  <section class="section soft-bg">
+    <div class="container split-grid">
+      <div class="info-card reveal">
+        <h2>Built around freshness and trust</h2>
+        <p>
+          Microgreeney was created to make fresh microgreens more accessible, more attractive, and easier to enjoy.
+          We believe healthy food should also feel premium, clean, and convenient.
+        </p>
+        <div class="hero-actions">
+          <a href="about.html" class="btn btn-primary">Read Our Story</a>
         </div>
       </div>
-    </section>
-  </main>
 
+      <div class="info-card reveal">
+        <h2>Perfect for everyday meals</h2>
+        <p>
+          Whether you are preparing breakfast, lunch, dinner, or a smoothie bowl, microgreens are an easy way
+          to enhance flavor and presentation while making your meals feel more wholesome.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP PREVIEW -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title center reveal">
+        <span class="eyebrow">Popular choices</span>
+        <h2>Discover our fresh selections</h2>
+      </div>
+
+      <div class="product-grid">
+        <div class="shop-card reveal">
+          <div class="product-top">🥬</div>
+          <h3>Sunflower Microgreens</h3>
+          <p>
+            Crisp, nutty, and satisfying. Great for sandwiches, wraps, and healthy snack plates.
+          </p>
+          <div class="price-row">
+            <span>RM 8.00</span>
+            <a href="shop.html" class="btn btn-outline small-btn">View Product</a>
+          </div>
+        </div>
+
+        <div class="shop-card reveal">
+          <div class="product-top">🌱</div>
+          <h3>Pea Shoots</h3>
+          <p>
+            Tender and sweet with a fresh garden taste that works beautifully in salads and side dishes.
+          </p>
+          <div class="price-row">
+            <span>RM 8.00</span>
+            <a href="shop.html" class="btn btn-outline small-btn">View Product</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section soft-bg">
+    <div class="container">
+      <div class="info-card reveal" style="text-align: center;">
+        <span class="eyebrow">Start your fresh journey</span>
+        <h2>Bring premium microgreens to your table today</h2>
+        <p>
+          Shop fresh greens, create your account, and enjoy a smoother ordering experience with Microgreeney.
+        </p>
+        <div class="hero-actions" style="justify-content: center;">
+          <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+          <a href="login.html" class="btn btn-outline">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
         <h3>Microgreeney</h3>
-        <p>Fresh indoor-grown microgreens for healthier meals, premium presentation, and everyday wellness.</p>
+        <p>
+          Fresh indoor microgreens grown with care for healthier meals, better presentation, and everyday convenience.
+        </p>
       </div>
 
       <div>
         <h4>Quick Links</h4>
         <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
+        <a href="about.html">About</a>
         <a href="shop.html">Shop</a>
         <a href="contact.html">Contact</a>
       </div>
 
       <div>
-        <h4>Account</h4>
-        <a href="login.html">Login</a>
-        <a href="login.html">Signup</a>
+        <h4>Support</h4>
+        <a href="track.html">Track Order</a>
+        <a href="login.html">Login / Sign Up</a>
+        <a href="cart.html">Cart</a>
       </div>
     </div>
 
@@ -221,7 +256,48 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
   <script type="module" src="firebase-auth.js"></script>
+  <script src="script.js"></script>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    const accountBtn = document.getElementById("accountBtn");
+    const accountDropdown = document.getElementById("accountDropdown");
+
+    if (menuToggle && navMenu) {
+      menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("show");
+      });
+    }
+
+    if (accountBtn && accountDropdown) {
+      accountBtn.addEventListener("click", () => {
+        accountDropdown.classList.toggle("show");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+          accountDropdown.classList.remove("show");
+        }
+      });
+    }
+
+    const reveals = document.querySelectorAll(".reveal");
+
+    function revealOnScroll() {
+      const triggerBottom = window.innerHeight * 0.88;
+
+      reveals.forEach((el) => {
+        const boxTop = el.getBoundingClientRect().top;
+        if (boxTop < triggerBottom) {
+          el.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", revealOnScroll);
+    window.addEventListener("load", revealOnScroll);
+  </script>
 </body>
 </html>
