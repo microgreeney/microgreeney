@@ -362,13 +362,23 @@ select {
   padding: 1rem 0 0.5rem;
 }
 
-.hero-grid,
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: center; /* keep hero nice */
+}
+
 .split-grid,
 .auth-wrap {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2rem;
-  align-items: center;
+}
+
+/* 🔥 Important fix */
+.split-grid {
+  align-items: stretch;
 }
 
 .contact-grid {
