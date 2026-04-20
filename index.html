@@ -16,52 +16,52 @@
 
   <!-- HEADER -->
   <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="index.html" class="logo">
-        <span class="logo-mark">🌱</span>
-        <span>Microgreeney</span>
+  <div class="container nav-wrap">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">🌱</span>
+      <span>Microgreeney</span>
+    </a>
+
+    <nav class="nav-menu" id="navMenu">
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="track.html">Track Order</a>
+      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+
+      <a href="cart.html" class="cart-btn">
+        🛒 Cart <span id="cart-count">0</span>
       </a>
 
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
-
-      <nav class="nav-menu" id="navMenu">
-        <a href="index.html" class="active">Home</a>
-        <a href="about.html">About</a>
-        <a href="shop.html">Shop</a>
-        <a href="track.html">Track Order</a>
-        <a href="contact.html">Contact</a>
-
-        <a href="cart.html" class="cart-btn">
-          Cart
-          <span id="cart-count">0</span>
+      <div id="guestSection">
+        <a href="login.html" class="btn btn-outline small-btn">
+          Login / Signup
         </a>
+      </div>
 
-        <div id="guestSection">
-          <a href="login.html" class="btn btn-outline small-btn">Login / Sign Up</a>
+      <div id="userSection" class="account-dropdown-wrap" style="display:none;">
+        <button id="accountBtn" class="account-btn" type="button">
+          <span id="userName"></span>
+          <span class="account-caret">▼</span>
+        </button>
+
+        <div id="accountDropdown" class="account-dropdown-menu">
+          <a href="profile.html">👤 Profile</a>
+          <a href="my-orders.html">📦 My Orders</a>
+          <button onclick="logoutUser()" type="button">🚪 Logout</button>
         </div>
+      </div>
+    </nav>
 
-        <div id="userSection" class="account-dropdown-wrap" style="display: none;">
-          <button class="account-btn" id="accountBtn" type="button">
-            <span id="userName">My Account</span>
-            <span class="account-caret">▼</span>
-          </button>
-
-          <div class="account-dropdown-menu" id="accountDropdown">
-            <a href="profile.html">My Profile</a>
-            <a href="my-orders.html">My Orders</a>
-            <a href="track.html">Track Order</a>
-            <a href="admin.html" id="adminLink" style="display: none;">Admin Panel</a>
-            <button type="button" onclick="logoutUser()">Logout</button>
-          </div>
-        </div>
-      </nav>
-
-      <a href="cart.html" class="cart-icon-mobile" aria-label="Cart">
-        🛒
-        <span id="cart-count-mobile">0</span>
+    <div class="nav-right">
+      <a href="cart.html" class="cart-icon-mobile">
+        🛒 <span id="cart-count-mobile">0</span>
       </a>
+      <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
-  </header>
+  </div>
+</header>
 
   <!-- HERO -->
   <section class="hero">
